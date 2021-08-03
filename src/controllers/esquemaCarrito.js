@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const esquemaCarrito = new mongoose.Schema({
+  username: { type: String, require: true, max:100},
   carId: { type: Number, require: true },
   carTimestamp: { type: String, require: true, max:100},
   id: { type: Number, require: true },

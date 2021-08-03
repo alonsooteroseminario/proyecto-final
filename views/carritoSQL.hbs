@@ -88,19 +88,30 @@
 <h1>Lista de Productos dentro del Carrito</h1>
 {{#if carritos}}
     <h1>El carrito tiene: {{carritos.length}} productos.</h1>
+
+    <div class="col">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#cart">
+            Finalizar Compra (<span class="total-count"></span>)
+        </button>
+        <button class="clear-cart btn btn-danger">
+            Limpiar Carrito
+        </button>
+    </div>
+
+
     {{#each carritos}}
         <div class="container">
             <div class="row">
                 <div class="col">
                     <div class="card" style="width: 20rem;">
-                        <img class="card-img-top" src={{{foto}}} alt="Card image cap">
+                        <img class="card-img-top" src={{{producto.foto}}} alt="Card image cap">
                         <div class="card-block">
-                            <h4 class="card-title">{{nombre}}</h4>
-                            <p class="card-text">Price: ${{precio}}</p>
+                            <h4 class="card-title">{{producto.nombre}}</h4>
+                            <p class="card-text">Price: ${{producto.precio}}</p>
                         </div>
                         <form action="/carrito/borrar/{{{id}}}?_method=DELETE" method="post" role="form">
                             <td>
-                                <input type="hidden" class="form-control" type="number" name="id" value={{{id}}} >
+                                <input type="hidden" class="form-control" type="number" name="id" value={{{producto.id}}} >
                                 <input type="hidden" name="form" value="1" />
                                 <input type="hidden" name="_method" value="DELETE">
                                 <button type="submit" class="form-control">Borrar del Carrito</button>

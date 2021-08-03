@@ -87,6 +87,17 @@
 <h1>Lista de Productos dentro del Carrito</h1>
 {{#if carritos}}
     <h1>El carrito tiene: {{carritos.length}} productos.</h1>
+
+    <div class="col">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#cart">
+            Finalizar Compra (<span class="total-count"></span>)
+        </button>
+        <button class="clear-cart btn btn-danger">
+            Limpiar Carrito
+        </button>
+    </div>
+
+
     {{#each carritos}}
         <div class="container">
             <div class="row">

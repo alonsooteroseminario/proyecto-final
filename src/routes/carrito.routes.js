@@ -14,18 +14,15 @@ router.get("/listar", async (req, res) => {
   const products = await product.get()
 
   //Aqui se debe filtrar deacuerdo al usuario user
-
-
-
-  
-
-  const carritos = await carrito.get()
+  const carritos = await carrito.get();
+  const currentCarrito = await carrito.getByUsername(user.username);
+  console.log(currentCarrito);
 
   if (tipoPersistencia == 2 || tipoPersistencia == 3 || tipoPersistencia == 4 || tipoPersistencia == 5 || tipoPersistencia == 6) {
     res.render('carritoSQL', {
       active: "carritoSQL",
       products: products,
-      carritos: carritos,
+      carritos: currentCarrito,
       user: user
     });
   }
@@ -33,7 +30,7 @@ router.get("/listar", async (req, res) => {
     res.render('carrito', {
       active: "carrito",
       products: products,
-      carritos: carritos,
+      carritos: currentCarrito,
       user: user
     });
   }
@@ -50,6 +47,7 @@ router.get("/listar", async (req, res) => {
 });
 // agregar orden al carrito
 router.post("/agregar", async (req, res) => {
+  const user = req.user;
   const data = req.body;
   const carritos = await carrito.get()
   // console.log(carritos);
@@ -67,6 +65,7 @@ router.post("/agregar", async (req, res) => {
       id: carritos.length + 1,
       timestamp: Date.now(),
       producto: {
+          username: user.username,
           prodId: currentProduct.prodId,
           timestamp: currentProduct.timestamp,
           nombre: currentProduct.nombre,
@@ -84,6 +83,7 @@ router.post("/agregar", async (req, res) => {
       id: carritos.length + 1,
       timestamp: Date.now(),
       producto: {
+          username: user.username,
           id: currentProduct.id,
           timestamp: currentProduct.timestamp,
           nombre: currentProduct.nombre,
