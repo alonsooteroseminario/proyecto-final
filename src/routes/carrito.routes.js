@@ -1,4 +1,6 @@
 const express = require('express');
+const nodemailer = require('nodemailer');
+require('dotenv').config();
 const router = express.Router();
 const Factory = require("../controllers/factory");
 const factory = new Factory();
@@ -7,6 +9,20 @@ const tipoPersistencia = 6;
 
 const product = factory.persistencia(tipoPersistencia,"productos");
 const carrito = factory.persistencia(tipoPersistencia,"carrito");
+
+/* --------------------- EMAILS Y MESSAGING --------------------------- */
+const transporter = nodemailer.createTransport({
+  host: 'smtp.ethereal.email',
+  port: 587,
+  auth: {
+      user: process.env.NODEMAIL_USER.toString(),
+      pass: process.env.NODEMAIL_PASS.toString()
+  }
+});
+const accountSid = process.env.ACCOUNT_SID_TWILIO.toString();
+const authToken = process.env.AUTHTOKEN_TWILIO.toString();
+
+const client = require('twilio')(accountSid, authToken);
 
 //Ver todos los productos
 router.get("/listar", async (req, res) => {
@@ -120,20 +136,64 @@ router.delete("/borrar/:id", async (req, res) => {
 });
 router.post('/comprar', async (req, res) => {
   const user = req.user;
-  const data = req.body;
+
+  let email = user.username;
+  let nombre = user.nombre;
+
+  let numero_administrador = process.env.NUMERO_ADMINISTRADOR.toString();
 
   const currentCarrito = await carrito.getByUsername(user.username);
 
+  let totalHtml = ''
+  // console.log(user)
+  // console.log(currentCarrito)
+  for (let index = 0; index < currentCarrito.length; index++) {
+    const element = currentCarrito[index];
+    let iterableHtml = `<------------------------------------------->
+                          <p>  Nombre : ${element.nombre} </p>  
+                          <p>  Descripción : ${element.descripcion} </p>
+                          <p>  Código : ${element.codigo} </p>
+                          <p>  Foto : ${element.foto} </p>
+                          <p>  Precio : ${element.precio} </p>
+                          <-------------------------------------------> \n\n`;
+    totalHtml += iterableHtml
+  }
 
-  console.log(user)
-  console.log(currentCarrito)
+  //enviar email hacia Adm
+  const mailOptionsLogin = {
+    from: 'Servidor Login',
+    to: email,
+    subject: `Nuevo pedido de ${nombre} con el email ${email} a las ${new Date().toLocaleString()}`,
+    html: `<h1>Lista de Productos: ${currentCarrito.length} Productos en el Carrito</h1>
+          ${totalHtml} `
+  };
+  //enviar whatsapp hacia Adm
+  client.messages.create({
+    body: `Nuevo pedido de ${nombre} con el email ${email} a las ${new Date().toLocaleString()}`,
+    from: 'whatsapp:+14155238886',
+    to: `whatsapp:${numero_administrador}`
+    })
+  .then(message => console.log(message.sid))
+  .catch(console.log)
+  //enviar mensaje usuario comprador
+  client.messages.create({
+    body: `Hola ${nombre}, tu pedido con el email ${email} ha sido recibido a las ${new Date().toLocaleString()} y se encuentra en proceso`,
+    from: '+17637103691',
+    to: user.telefono.toString()
+  })
+  .then(message => console.log(message.sid))
+  .catch(console.log)
 
-  //enviar email
+  transporter.sendMail(mailOptionsLogin, (err, info) => {
+    if(err) {
+        console.log(err)
+        return err
+    }
+    // console.log(info)
+  });
 
 
 
-
-  
   res.redirect('/carrito/listar')
 })
 
