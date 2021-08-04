@@ -14,9 +14,7 @@ router.get("/listar", async (req, res) => {
   const products = await product.get()
 
   //Aqui se debe filtrar deacuerdo al usuario user
-  const carritos = await carrito.get();
   const currentCarrito = await carrito.getByUsername(user.username);
-  console.log(currentCarrito);
 
   if (tipoPersistencia == 2 || tipoPersistencia == 3 || tipoPersistencia == 4 || tipoPersistencia == 5 || tipoPersistencia == 6) {
     res.render('carritoSQL', {
@@ -120,5 +118,23 @@ router.delete("/borrar/:id", async (req, res) => {
       res.json(currentOrden);
       carrito.remove(id);
 });
+router.post('/comprar', async (req, res) => {
+  const user = req.user;
+  const data = req.body;
+
+  const currentCarrito = await carrito.getByUsername(user.username);
+
+
+  console.log(user)
+  console.log(currentCarrito)
+
+  //enviar email
+
+
+
+
+  
+  res.redirect('/carrito/listar')
+})
 
 module.exports = router;

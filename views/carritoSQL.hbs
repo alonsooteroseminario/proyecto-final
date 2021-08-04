@@ -90,12 +90,17 @@
     <h1>El carrito tiene: {{carritos.length}} productos.</h1>
 
     <div class="col">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#cart">
-            Finalizar Compra (<span class="total-count"></span>)
-        </button>
-        <button class="clear-cart btn btn-danger">
-            Limpiar Carrito
-        </button>
+        <form action="/carrito/comprar" method="post" role="form">
+            <td>
+                <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#cart">
+                    Finalizar Compra 
+                </button>
+
+                <button class="clear-cart btn btn-danger">
+                    Limpiar Carrito
+                </button>
+            </td>
+        </form>
     </div>
 
 

@@ -66,7 +66,7 @@ class CarritoDB {
       if (err) {
         console.log(err)
       } else {
-        console.log(res)
+        // console.log(res)
       }
     }).lean();
   }
@@ -76,7 +76,7 @@ class CarritoDB {
       if (err) {
         console.log(err)
       } else {
-        console.log(res)
+        // console.log(res)
       }
     }).lean();
   }
