@@ -10,6 +10,9 @@ const MongoStore = require('connect-mongo');
 const session = require('express-session');
 const nodemailer = require('nodemailer');
 const cookieParser = require('cookie-parser');
+// const multer = require('multer');
+// const path = require('path');
+// var fs = require('fs');
 const productRoutes = require("./routes/products.routes");
 const productCarritoRoutes = require("./routes/carrito.routes");
 const frontRoutes = require('./routes');
@@ -31,6 +34,10 @@ const transporter = nodemailer.createTransport({
       pass: process.env.NODEMAIL_PASS.toString()
   }
 });
+/* --------------------- UPLOAD FILES MULTER --------------------------- */
+
+//will be using this for uplading
+// const upload = multer({dest: '/public/uploads/'});
 /* ------------------ PASSPORT -------------------- */
 passport.use('register', new LocalStrategy({ passReqToCallback: true }, async (req, username, password, done) => {
 
@@ -82,7 +89,7 @@ passport.use('register', new LocalStrategy({ passReqToCallback: true }, async (r
   })
 
   usuarios.push(user)
-  console.log(user);
+
   await usuarioDB.insertar(usuarios);
 
   return done(null, user)

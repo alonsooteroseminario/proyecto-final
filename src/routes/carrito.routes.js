@@ -192,9 +192,13 @@ router.post('/comprar', async (req, res) => {
     // console.log(info)
   });
 
-
-
-  res.redirect('/carrito/listar')
+  res.redirect('/carrito/comprafinalizada')
+})
+router.get('/carrito/comprafinalizada', async (req, res) => {
+  const user = req.user;
+  res.render('comprafinalizada', {
+    user: user
+  })
 })
 
 module.exports = router;
