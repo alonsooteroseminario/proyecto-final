@@ -10,6 +10,7 @@ const MongoStore = require('connect-mongo');
 const session = require('express-session');
 const nodemailer = require('nodemailer');
 const cookieParser = require('cookie-parser');
+const { logger, loggerWarn, loggerError } = require('./logger');
 // const multer = require('multer');
 // const path = require('path');
 // var fs = require('fs');
@@ -41,76 +42,98 @@ const transporter = nodemailer.createTransport({
 /* ------------------ PASSPORT -------------------- */
 passport.use('register', new LocalStrategy({ passReqToCallback: true }, async (req, username, password, done) => {
 
-  const { nombre } = req.body
-  const { edad } = req.body
-  const { foto } = req.body
-  const { telefono } = req.body
-  const { direccion } = req.body
+    try{
 
-  let usuarios = await usuarioDB.listar();
-
-  const usuario = usuarios.find(usuario => usuario.username == username)
-
-  if (usuario) {
-    return done('already registered')
-  }
-
-  const hashPassword = createHash(password);
-
-  const user = {
-    nombre,
-    username,
-    edad,
-    foto,
-    telefono,
-    hashPassword,
-    direccion,
-  }
-
-  const mailOptionsLogin = {
-    from: 'Servidor Login',
-    to: process.env.NODEMAIL_USER.toString(),
-    subject: `Nuevo Registro a las ${new Date().toLocaleString()}`,
-    html: `<h1>Se ha registrado un nuevo usuario a las ${new Date().toLocaleString()} </h1>\n\n
-            Nombre: ${nombre} \n
-            Email: ${username} \n
-            Edad: ${edad} \n
-            Foto: ${foto} \n
-            Teléfono: ${telefono} \n
-            Dirección: ${direccion}`
-  };
-
-  transporter.sendMail(mailOptionsLogin, (err, info) => {
-      if(err) {
-          console.log(err)
-          return err
+      const { nombre } = req.body
+      const { edad } = req.body
+      const { foto } = req.body
+      const { telefono } = req.body
+      const { direccion } = req.body
+    
+      let usuarios = await usuarioDB.listar();
+    
+      const usuario = usuarios.find(usuario => usuario.username == username)
+    
+      if (usuario) {
+        return done('already registered')
       }
-      // console.log(info)
-  })
+    
+      const hashPassword = createHash(password);
+    
+      const user = {
+        nombre,
+        username,
+        edad,
+        foto,
+        telefono,
+        hashPassword,
+        direccion,
+      }
+    
+      const mailOptionsLogin = {
+        from: 'Servidor Login',
+        to: process.env.NODEMAIL_USER.toString(),
+        subject: `Nuevo Registro a las ${new Date().toLocaleString()}`,
+        html: `<h1>Se ha registrado un nuevo usuario a las ${new Date().toLocaleString()} </h1>\n\n
+                Nombre: ${nombre} \n
+                Email: ${username} \n
+                Edad: ${edad} \n
+                Foto: ${foto} \n
+                Teléfono: ${telefono} \n
+                Dirección: ${direccion}`
+      };
+    
+      transporter.sendMail(mailOptionsLogin, (err, info) => {
+          if(err) {
+              console.log(err)
+              return err
+          }
+          // console.log(info)
+      })
+    
+      usuarios.push(user)
+    
+      await usuarioDB.insertar(usuarios);
 
-  usuarios.push(user)
+      logger.info('Register -----------------> OK');
+      loggerWarn.warn('Register -----------------> OK')
+    
+      return done(null, user)
 
-  await usuarioDB.insertar(usuarios);
+    }catch (err) {
+      loggerWarn.warn('Error message: ' + err)
+      logger.info('Error message: ' + err);
+      loggerError.error('Error message: ' + err);
+    }
 
-  return done(null, user)
 }));
 passport.use('login', new LocalStrategy(async (username, password, done) => {
 
-  let usuarios = await usuarioDB.listar();
+    try {
+      let usuarios = await usuarioDB.listar();
 
-  const user = usuarios.find(usuario => usuario.username == username)
+      const user = usuarios.find(usuario => usuario.username == username)
+    
+      if (!user) {
+        return done(null, false)
+      }
+    
+      if (!isValidPassword(user, password)) {
+        return done(null, false)
+      }
+    
+      user.contador = 0
 
-  if (!user) {
-    return done(null, false)
-  }
+      logger.info('Login -----------------> OK');
+      loggerWarn.warn('Login -----------------> OK')
+    
+      return done(null, user);
+    } catch (err) {
+      loggerWarn.warn('Error message: ' + err)
+      logger.info('Error message: ' + err);
+      loggerError.error('Error message: ' + err);
+    }
 
-  if (!isValidPassword(user, password)) {
-    return done(null, false)
-  }
-
-  user.contador = 0
-
-  return done(null, user);
 }));
 passport.serializeUser(function (user, done) {
   done(null, user.username);
@@ -191,8 +214,11 @@ app.get('/logout', (req, res) => {
   }, 2000);
 })
 
-const port = 8080;
+const port = parseInt(process.argv[2]) || process.env.PORT || 8080;
 const server = app.listen(port, () => {
-  console.log('El servidor esta corriendo en el puerto: ' + server.address().port);
+  logger.info('El servidor esta corriendo en el puerto: ' + server.address().port);
 });
-server.on('error', err => console.log('Error message: ' + err));
+server.on('error', err => {
+  logger.info('Error message: ' + err); 
+  loggerError.error('Error message: ' + err);
+});

@@ -7,7 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/server.es6.js",
     "dev": "nodemon src/server.es6.js",
-    "build": "node_modules/.bin/tsc src/server.ts -w --esModuleInterop"
+    "build": "node_modules/.bin/tsc src/server.ts -w --esModuleInterop",
+    "fork": "pm2 start src/server.es6.js --name='ServerFork' --watch --",
+    "cluster": "pm2 start src/server.es6.js --name='ServerCluster' --watch -i max --"
   },
   "keywords": [],
   "author": "Luis Alonso Otero <alonsooteroseminario@gmail.com>",
@@ -32,6 +34,8 @@
     "nodemailer": "^6.6.3",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
+    "pino": "^6.13.0",
+    "pm2": "^5.1.0",
     "pug": "^3.0.2",
     "socket.io": "^4.1.1",
     "sqlite3": "^5.0.2",
