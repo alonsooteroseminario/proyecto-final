@@ -4,20 +4,31 @@ require('dotenv').config();
 const passport = require('passport');
 const { Strategy: LocalStrategy } = require('passport-local');
 const bCrypt = require('bcrypt');
-const UsuarioDB = require('./db/usuariosDb.js');
+const UsuarioDB = require('./controllers/usuarioDb/usuariosDb.js');
 const usuarioDB = new UsuarioDB();
 const MongoStore = require('connect-mongo');
 const session = require('express-session');
 const nodemailer = require('nodemailer');
 const cookieParser = require('cookie-parser');
-const { logger, loggerWarn, loggerError } = require('./logger');
-// const multer = require('multer');
-// const path = require('path');
-// var fs = require('fs');
+const { logger, loggerWarn, loggerError } = require('./utils/logger');
 const productRoutes = require("./routes/products.routes");
 const productCarritoRoutes = require("./routes/carrito.routes");
 const frontRoutes = require('./routes');
 const app = express();
+var hbs = exphbs.create({
+  extname: "hbs",
+  defaultLayout: 'main.hbs',
+  allowedProtoMethods: {
+    trim: true
+  }
+});
+app.engine('hbs', hbs.engine);
+app.set('view engine', 'hbs');
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static("./public"));
+app.use(cookieParser());
 
 /* ------------- VALIDATE PASSWORD ---------------- */
 const isValidPassword = function(user, password) {
@@ -35,10 +46,6 @@ const transporter = nodemailer.createTransport({
       pass: process.env.NODEMAIL_PASS.toString()
   }
 });
-/* --------------------- UPLOAD FILES MULTER --------------------------- */
-
-//will be using this for uplading
-// const upload = multer({dest: '/public/uploads/'});
 /* ------------------ PASSPORT -------------------- */
 passport.use('register', new LocalStrategy({ passReqToCallback: true }, async (req, username, password, done) => {
 
@@ -151,26 +158,13 @@ function isAuth(req, res, next) {
     res.redirect('/login')
   }
 }
+
 /* --------------------- MONGO SESSION --------------------------- */
 const advancedOptions = { useNewUrlParser: true, useUnifiedTopology: true };
 const admin = process.env.MONGO_USER;
 const password = process.env.MONGO_PASSWORD;
 const url = 'mongodb+srv://'+admin.toString()+':'+password.toString()+'@cluster0.rzdyo.mongodb.net/sesiones?retryWrites=true&w=majority';
 
-var hbs = exphbs.create({
-  extname: "hbs",
-  defaultLayout: 'main.hbs',
-  allowedProtoMethods: {
-    trim: true
-  }
-});
-app.engine('hbs', hbs.engine);
-app.set('view engine', 'hbs');
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static("./public"));
-app.use(cookieParser());
 app.use(session({
   store: MongoStore.create({
     mongoUrl: url,

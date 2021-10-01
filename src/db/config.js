@@ -8,8 +8,8 @@ const mysqlLocal = {
       password: '',
       database: 'ecommerce'
     }
-  }
-  const mysqlDBaaS = {
+}
+const mysqlDBaaS = {
     client: 'mysql',
     connection: {
       host: process.env.MYSQL_ADDON_HOST.toString(),
@@ -17,7 +17,7 @@ const mysqlLocal = {
       password: process.env.MYSQL_ADDON_PASSWORD.toString(),
       database: process.env.MYSQL_ADDON_DB.toString()
     }
-  }
+}
 const sqlite3Producto = {
     client: 'sqlite3',
     connection: { filename: 'productos.sqlite' },
@@ -40,9 +40,6 @@ const configFirebase = {
   auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
   client_x509_cert_url: "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-piomu%40coderhouse-proyecto-final.iam.gserviceaccount.com"
 }
-
-
-require('dotenv').config();
 
 const mongoDBaaS = process.env.MONGODB_URL.toString();
 

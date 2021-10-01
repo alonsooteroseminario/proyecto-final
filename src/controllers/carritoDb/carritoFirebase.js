@@ -1,5 +1,5 @@
 const admin = require('firebase-admin');
-const { configFirebase } = require('../db/config');
+const { configFirebase } = require('../../db/config');
 const serviceAccount = configFirebase;
 
 class CarritoDB {

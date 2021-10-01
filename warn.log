@@ -1,2 +1,12 @@
 {"level":40,"time":1628463243638,"pid":6653,"hostname":"DESKTOP-CD4IMJA","msg":"Login -----------------> OK"}
 {"level":40,"time":1628471386637,"pid":10202,"hostname":"DESKTOP-CD4IMJA","msg":"Login -----------------> OK"}
+{"level":40,"time":1632110772850,"pid":2456,"hostname":"LAPTOP-3FNR6K70","msg":"Register -----------------> OK"}
+{"level":40,"time":1632281526582,"pid":1373,"hostname":"LAPTOP-3FNR6K70","msg":"Register -----------------> OK"}
+{"level":40,"time":1632281551481,"pid":1373,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}
+{"level":40,"time":1632844648665,"pid":737,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}
+{"level":40,"time":1632845740557,"pid":1511,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}
+{"level":40,"time":1632847457159,"pid":2369,"hostname":"LAPTOP-3FNR6K70","msg":"Error message: TypeError: daoUsuarios.find is not a function"}
+{"level":40,"time":1632847505404,"pid":2485,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}
+{"level":40,"time":1632848371547,"pid":3384,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}
+{"level":40,"time":1632869825986,"pid":732,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}
+{"level":40,"time":1633108523377,"pid":392,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}

@@ -6,7 +6,7 @@ const password = process.env.MONGO_PASSWORD;
 
 const url = 'mongodb+srv://'+admin.toString()+':'+password.toString()+'@cluster0.rzdyo.mongodb.net/ecommerce?retryWrites=true&w=majority';
 
-const {daoProductos} = require('./esquemaProducto');
+const {daoProductos} = require('../../models/esquemaProducto');
   
   class ProductoDB {
   
