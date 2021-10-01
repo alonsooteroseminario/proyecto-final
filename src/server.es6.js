@@ -8,12 +8,9 @@ const UsuarioDB = require('./controllers/usuarioDb/usuariosDb.js');
 const usuarioDB = new UsuarioDB();
 const MongoStore = require('connect-mongo');
 const session = require('express-session');
-const nodemailer = require('nodemailer');
+const transporter = require('./middlewares/emails')
 const cookieParser = require('cookie-parser');
 const { logger, loggerWarn, loggerError } = require('./utils/logger');
-const productRoutes = require("./routes/products.routes");
-const productCarritoRoutes = require("./routes/carrito.routes");
-const frontRoutes = require('./routes');
 const app = express();
 var hbs = exphbs.create({
   extname: "hbs",
@@ -37,15 +34,7 @@ const isValidPassword = function(user, password) {
 let createHash = function(password) {
   return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
 }
-/* --------------------- EMAILS Y MESSAGING --------------------------- */
-const transporter = nodemailer.createTransport({
-  host: 'smtp.ethereal.email',
-  port: 587,
-  auth: {
-      user: process.env.NODEMAIL_USER.toString(),
-      pass: process.env.NODEMAIL_PASS.toString()
-  }
-});
+
 /* ------------------ PASSPORT -------------------- */
 passport.use('register', new LocalStrategy({ passReqToCallback: true }, async (req, username, password, done) => {
 
@@ -178,9 +167,9 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use("/productos", isAuth, productRoutes);
-app.use("/productos/agregar", isAuth, frontRoutes);
-app.use('/carrito', isAuth, productCarritoRoutes);
+app.use("/productos", isAuth, require("./routes/products.routes"));
+app.use("/productos/agregar", isAuth, require('./routes/agregarProducto.routes'));
+app.use('/carrito', isAuth, require("./routes/carrito.routes"));
 
 /* --------------------- PASSPORT ROUTES --------------------------- */
 app.post('/login', passport.authenticate('login', { failureRedirect: '/faillogin', successRedirect: '/productos/listar' }))
