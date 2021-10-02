@@ -211,14 +211,20 @@ app.get('/chat', isAuth, (req, res) => {
   res.sendFile('./index.html', { root:__dirname })
 });
 
-const messages = []
+const MensajeDB = require('./controllers/mensajesDb')
+const mensajesDB = new MensajeDB()
 
-io.on('connection', socket => {
+// const messages = []
+
+
+io.on('connection', async socket => {
   console.log('Un cliente se ha conectado')
+  let messages = await mensajesDB.listar()
   socket.emit('messages', messages)
 
-  socket.on('new-message', data => {
+  socket.on('new-message', async data => {
       messages.push(data)
+      await mensajesDB.insertar(messages)
       io.sockets.emit('messages', messages)
   })
 })
