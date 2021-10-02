@@ -31,3 +31,6 @@
 {"level":40,"time":1633184985866,"pid":2835,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}
 {"level":40,"time":1633185056394,"pid":2835,"hostname":"LAPTOP-3FNR6K70","msg":"Register -----------------> OK"}
 {"level":40,"time":1633185756890,"pid":3607,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}
+{"level":40,"time":1633192025145,"pid":6517,"hostname":"LAPTOP-3FNR6K70","msg":"Error message: MongooseError: Query was already executed: usuarios.find({})"}
+{"level":40,"time":1633192402945,"pid":7704,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}
+{"level":40,"time":1633192612350,"pid":8260,"hostname":"LAPTOP-3FNR6K70","msg":"Mensaje warn -----------------> OK"}

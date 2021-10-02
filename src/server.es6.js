@@ -14,6 +14,7 @@ const { logger, loggerWarn, loggerError } = require('./utils/logger');
 const app = express();
 const httpServer = require('http').Server(app);
 const io = require('socket.io')(httpServer);
+const compression = require('compression');
 
 var hbs = exphbs.create({
   extname: "hbs",
@@ -210,7 +211,26 @@ app.get('/chat', isAuth, (req, res) => {
   // res.status(200)
   res.sendFile('./index.html', { root:__dirname })
 });
-
+/* --------- INFO ---------- */
+app.get('/info', compression(), (req, res) => {
+  try {
+    console.log('Console log INFO')
+    logger.info('Mensaje info -----------------> OK');
+    loggerWarn.warn('Mensaje warn -----------------> OK')
+    const numCPUs = require('os').cpus().length
+    res.render('info', {
+      user: req.user,
+      info: process,
+      argv: process.argv,
+      memoryUsage: process.memoryUsage(),
+      numCPUs: numCPUs,
+    });
+  } catch(err) {
+    loggerWarn.warn('Error message: ' + err)
+    logger.info('Error message: ' + err);
+    loggerError.error('Error message: ' + err);
+  }
+});
 const MensajeDB = require('./controllers/mensajesDb')
 const mensajesDB = new MensajeDB()
 
