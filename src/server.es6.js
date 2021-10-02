@@ -12,6 +12,9 @@ const transporter = require('./middlewares/emails')
 const cookieParser = require('cookie-parser');
 const { logger, loggerWarn, loggerError } = require('./utils/logger');
 const app = express();
+const httpServer = require('http').Server(app);
+const io = require('socket.io')(httpServer);
+
 var hbs = exphbs.create({
   extname: "hbs",
   defaultLayout: 'main.hbs',
@@ -170,6 +173,9 @@ app.use(passport.session());
 app.use("/productos", isAuth, require("./routes/products.routes"));
 app.use("/productos/agregar", isAuth, require('./routes/agregarProducto.routes'));
 app.use('/carrito', isAuth, require("./routes/carrito.routes"));
+app.get('/', (req, res) => {
+  res.render('login')
+})
 
 /* --------------------- PASSPORT ROUTES --------------------------- */
 app.post('/login', passport.authenticate('login', { failureRedirect: '/faillogin', successRedirect: '/productos/listar' }))
@@ -197,8 +203,29 @@ app.get('/logout', (req, res) => {
   }, 2000);
 })
 
+app.get('/chat', isAuth, (req, res) => {
+  if (!req.user.contador){
+    req.user.contador = 0
+  }
+  // res.status(200)
+  res.sendFile('./index.html', { root:__dirname })
+});
+
+const messages = []
+
+io.on('connection', socket => {
+  console.log('Un cliente se ha conectado')
+  socket.emit('messages', messages)
+
+  socket.on('new-message', data => {
+      messages.push(data)
+      io.sockets.emit('messages', messages)
+  })
+})
+
 const port = parseInt(process.argv[2]) || process.env.PORT || 8080;
-const server = app.listen(port, () => {
+
+const server = httpServer.listen(port, () => {
   logger.info('El servidor esta corriendo en el puerto: ' + server.address().port);
 });
 server.on('error', err => {
