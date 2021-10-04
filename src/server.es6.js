@@ -1,6 +1,11 @@
 const express = require("express");
 const exphbs = require('express-handlebars');
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config(  
+  {
+    path: path.resolve(process.env.NODE_ENV + '.env')
+  }
+);
 const passport = require('passport');
 const { Strategy: LocalStrategy } = require('passport-local');
 const bCrypt = require('bcrypt');
@@ -161,7 +166,7 @@ const url = 'mongodb+srv://'+admin.toString()+':'+password.toString()+'@cluster0
 app.use(session({
   store: MongoStore.create({
     mongoUrl: url,
-    ttl: 10 * 60, // = 10 min. Default
+    ttl: parseInt(process.env.TIME_SESSION), // = 10 min. Default
     mongoOptions: advancedOptions }),
   secret: 'secret',
   resave: false,
@@ -231,11 +236,25 @@ app.get('/info', compression(), (req, res) => {
     loggerError.error('Error message: ' + err);
   }
 });
+
+app.get('/config', (req, res) => {
+  try {
+    res.render('config', {
+      user: req.user,
+      info: process,
+      NODE_ENV: process.env.NODE_ENV,
+      port: process.env.PORT,
+      url: process.env.MONGODB_URL,
+      mail: process.env.GMAIL_EMAIL,
+      timeSession: process.env.TIME_SESSION
+    });
+  } catch(err) {
+ 
+  }
+})
+
 const MensajeDB = require('./controllers/mensajesDb')
 const mensajesDB = new MensajeDB()
-
-// const messages = []
-
 
 io.on('connection', async socket => {
   console.log('Un cliente se ha conectado')
@@ -251,6 +270,7 @@ io.on('connection', async socket => {
 
 const port = parseInt(process.argv[2]) || process.env.PORT || 8080;
 
+console.log(process.env.NODE_ENV)
 const server = httpServer.listen(port, () => {
   logger.info('El servidor esta corriendo en el puerto: ' + server.address().port);
 });

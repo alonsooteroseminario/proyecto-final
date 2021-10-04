@@ -7,6 +7,7 @@ document.getElementById('agregar-carrito').addEventListener('click', () => {
       socket.emit('boton', producto);
       console.log(producto)
 })
+
 // document.getElementById('borrar-carrito').addEventListener('click', () => {
 
 // })

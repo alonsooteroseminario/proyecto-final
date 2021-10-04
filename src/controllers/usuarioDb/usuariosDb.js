@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
 
-const admin = process.env.MONGO_USER;
-const password = process.env.MONGO_PASSWORD;
-const url = 'mongodb+srv://'+admin.toString()+':'+password.toString()+'@cluster0.rzdyo.mongodb.net/ecommerce?retryWrites=true&w=majority';
+const url = process.env.MONGODB_URL
+console.log(url)
 
 // const url = 'mongodb://localhost:27017/weclash';
 
