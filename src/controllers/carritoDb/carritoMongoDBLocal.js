@@ -2,9 +2,9 @@ const mongoose = require('mongoose');
 
 const url = 'mongodb://localhost:27017/ecommerce';
 
-const {daoProductos} = require('./esquemaProducto');
+const {daoCarritos} = require('../../models/esquemaCarrito');
 
-class ProductoDB {
+class CarritoDB {
 
   constructor() {
     mongoose.connect(url,{
@@ -15,17 +15,19 @@ class ProductoDB {
       if (err) {
         console.log(err);
       }else{
-        console.log('Conectado a la base en constructor de productoDb');
-        this.DB_PRODUCTOS = this.get();
+        console.log('Conectado a la base en constructor de CarritoDb');
+        this.DB_CARRITO = this.get();
       }
     })
   }
 
   add (data) {
-    data.id = this.DB_PRODUCTOS.length + 1;
-    const producto = {
+    data.carId = this.DB_CARRITO.length + 1;
+    const carrito = {
+      carId: data.carId,
+      carTimestamp: Date.now(),
       id: data.id,
-      timestamp: Date.now(),
+      timestamp: data.timestamp,
       nombre: data.nombre,
       descripcion: data.descripcion,
       codigo: data.codigo,
@@ -33,8 +35,7 @@ class ProductoDB {
       precio: data.precio,
       stock: data.stock
     }
-    // console.log(producto);
-    return daoProductos.create(producto, (err,res) => {
+    return daoCarritos.create(carrito, (err,res) => {
       if (err) {
         console.log(err);
       }else{
@@ -45,27 +46,30 @@ class ProductoDB {
   }
 
   get () {
-    return daoProductos.find({}, (err,res) => {
+    return daoCarritos.find({}, (err,res) => {
       if (err) {
         console.log(err)
       } else {
-        this.DB_PRODUCTOS = res;
+        // console.log(res)
+        this.DB_CARRITO = res;
       }
     }).lean();
   }
 
   getById(id) {
-    return daoProductos.find({id: id}, (err,res) => {
+    return daoCarritos.find({carId: id}, (err,res) => {
       if (err) {
         console.log(err)
       } else {
         console.log(res)
       }
-    });
+    }).lean();
   }
 
   update(id, data) {
 
+    const nuevoId = data.id;
+    const nuevoTimestamp = data.timestamp;
     const nuevoNombre = data.nombre;
     const nuevoDescripcion = data.descripcion;
     const nuevoCodigo = data.codigo;
@@ -73,7 +77,11 @@ class ProductoDB {
     const nuevoPrecio = data.precio;
     const nuevoStock = data.stock;
 
-    return daoProductos.updateOne({id: id}, {$set: {
+    return daoCarritos.updateOne({carId: id}, {$set: {
+      carId: id,
+      carTimestamp: Date.now(),
+      id: nuevoId,
+      timestamp: nuevoTimestamp,
       nombre: nuevoNombre,
       descripcion: nuevoDescripcion,
       codigo: nuevoCodigo,
@@ -91,7 +99,7 @@ class ProductoDB {
   }
 
   remove(id) {
-    return daoProductos.deleteOne({id: id}, (err,res) => {
+    return daoCarritos.deleteOne({carId: id}, (err,res) => {
       if (err) {
         console.log(err)
       } else {
@@ -103,7 +111,7 @@ class ProductoDB {
   cerrar() {
     mongoose.disconnect(err => { console.log('desconectado de la base') });
   }
-
+  
 }
 
-module.exports = ProductoDB;
+module.exports = CarritoDB;

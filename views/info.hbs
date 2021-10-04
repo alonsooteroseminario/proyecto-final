@@ -1,5 +1,4 @@
 {{#if user}}  
-
     <div class="form-group">
 
         <label>Bievenido! {{user.username}}</label>
@@ -77,6 +76,7 @@
 
     </div>
 {{else}}
+    <p>Vista de Productos</p>
 
     <div class="form-group">
         <label>Usuario no Logeado</label>
@@ -84,38 +84,67 @@
 
 {{/if}}
 
-<h1>Lista de Productos dentro del Carrito</h1>
-{{#if carritos}}
-    <h1>El carrito tiene: {{carritos.length}} productos.</h1>
-        <form action="/carrito/comprar" method="post" role="form" id="form-comprar">
-            <div class="col">
-                    <td>
-                        <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#cart">
-                            Finalizar Compra 
-                        </button>
+{{#if info}}  
+        <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">
+                    Argumentos de entrada
+                </th>
+                <th scope="col">Nombre de plataforma</th>
+                <th scope="col">Version de node.js</th>
+                <th scope="col">
+                    Uso de memoria
+                </th>
+                <th scope="col">Path de Ejecución</th>
+                <th scope="col">Process id</th>
+                <th scope="col">Carpeta corriente</th>
+                <th scope="col">Numero de CPUs presentes</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
 
-                        <button class="clear-cart btn btn-danger">
-                            Limpiar Carrito
-                        </button>
-                    </td>
-            </div>
-            {{#each carritos}}
-                <div class="container">
-                    <div class="row">
-                        <div class="col">
-                            <div class="card" style="width: 20rem;">
-                                <img class="card-img-top" src={{{producto.foto}}} alt="Card image cap">
-                                <div class="card-block">
-                                    <h4 class="card-title" >{{producto.nombre}}</h4>
-                                    <p class="card-text" >Price: ${{producto.precio}}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            {{/each}}
-        </form>
+                    {{#each argv}}
+                    <li>
+                        {{ this }}
+                    </li>
+                    {{/each}}
+
+                </td>
+                <td>{{info.title}}</td>
+                <td>{{info.version}}</td>
+
+                <td>
+
+                    <li>
+                      rss:  {{memoryUsage.rss}}
+                    </li>
+                    <li>
+                      heapTotal:  {{memoryUsage.heapTotal}}
+                    </li>
+                    <li>
+                      heapUsed:  {{memoryUsage.heapUsed}}
+                    </li>
+                    <li>
+                      external:  {{memoryUsage.external}}
+                    </li>
+                    <li>
+                      arrayBuffers:  {{memoryUsage.arrayBuffers}}
+                    </li>
+
+                </td>
+
+                <td>{{info.execPath}}</td> 
+                <td>{{info.pid}}</td> 
+                <td>{{info.cwd}}</td> 
+                <td>{{numCPUs}}</td> 
+            </tr>
+        </tbody>
+    </table>
 {{else}}
-    <p>No hay ordenes en el carrito</p>
+    <p>
+        process NO
+    </p>
 {{/if}}
-

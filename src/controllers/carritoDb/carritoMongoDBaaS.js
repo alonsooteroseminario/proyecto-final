@@ -1,8 +1,12 @@
 const mongoose = require('mongoose');
+require('dotenv').config();
 
-const url = 'mongodb://localhost:27017/ecommerce';
+const admin = process.env.MONGO_USER;
+const password = process.env.MONGO_PASSWORD;
 
-const {daoCarritos} = require('./esquemaCarrito');
+const url = 'mongodb+srv://'+admin.toString()+':'+password.toString()+'@cluster0.rzdyo.mongodb.net/ecommerce?retryWrites=true&w=majority';
+
+const {daoCarritos} = require('../../models/esquemaCarrito');
 
 class CarritoDB {
 
@@ -24,6 +28,7 @@ class CarritoDB {
   add (data) {
     data.carId = this.DB_CARRITO.length + 1;
     const carrito = {
+      username: data.username,
       carId: data.carId,
       carTimestamp: Date.now(),
       id: data.id,
@@ -61,7 +66,17 @@ class CarritoDB {
       if (err) {
         console.log(err)
       } else {
-        console.log(res)
+        // console.log(res)
+      }
+    }).lean();
+  }
+
+  getByUsername(username) {
+    return daoCarritos.find({username: username}, (err,res) => {
+      if (err) {
+        console.log(err)
+      } else {
+        // console.log(res)
       }
     }).lean();
   }
@@ -76,8 +91,10 @@ class CarritoDB {
     const nuevoFoto = data.foto;
     const nuevoPrecio = data.precio;
     const nuevoStock = data.stock;
+    const nuevoUsername = data.username;
 
     return daoCarritos.updateOne({carId: id}, {$set: {
+      username: nuevoUsername,
       carId: id,
       carTimestamp: Date.now(),
       id: nuevoId,

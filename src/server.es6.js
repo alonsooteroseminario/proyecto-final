@@ -1,23 +1,40 @@
 const express = require("express");
 const exphbs = require('express-handlebars');
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config(  
+  {
+    path: path.resolve(process.env.NODE_ENV + '.env')
+  }
+);
 const passport = require('passport');
 const { Strategy: LocalStrategy } = require('passport-local');
 const bCrypt = require('bcrypt');
-const UsuarioDB = require('./db/usuariosDb.js');
+const UsuarioDB = require('./controllers/usuarioDb/usuariosDb.js');
 const usuarioDB = new UsuarioDB();
 const MongoStore = require('connect-mongo');
 const session = require('express-session');
-const nodemailer = require('nodemailer');
+const transporter = require('./middlewares/emails')
 const cookieParser = require('cookie-parser');
-const { logger, loggerWarn, loggerError } = require('./logger');
-// const multer = require('multer');
-// const path = require('path');
-// var fs = require('fs');
-const productRoutes = require("./routes/products.routes");
-const productCarritoRoutes = require("./routes/carrito.routes");
-const frontRoutes = require('./routes');
+const { logger, loggerWarn, loggerError } = require('./utils/logger');
 const app = express();
+const httpServer = require('http').Server(app);
+const io = require('socket.io')(httpServer);
+const compression = require('compression');
+
+var hbs = exphbs.create({
+  extname: "hbs",
+  defaultLayout: 'main.hbs',
+  allowedProtoMethods: {
+    trim: true
+  }
+});
+app.engine('hbs', hbs.engine);
+app.set('view engine', 'hbs');
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static("./public"));
+app.use(cookieParser());
 
 /* ------------- VALIDATE PASSWORD ---------------- */
 const isValidPassword = function(user, password) {
@@ -26,19 +43,7 @@ const isValidPassword = function(user, password) {
 let createHash = function(password) {
   return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
 }
-/* --------------------- EMAILS Y MESSAGING --------------------------- */
-const transporter = nodemailer.createTransport({
-  host: 'smtp.ethereal.email',
-  port: 587,
-  auth: {
-      user: process.env.NODEMAIL_USER.toString(),
-      pass: process.env.NODEMAIL_PASS.toString()
-  }
-});
-/* --------------------- UPLOAD FILES MULTER --------------------------- */
 
-//will be using this for uplading
-// const upload = multer({dest: '/public/uploads/'});
 /* ------------------ PASSPORT -------------------- */
 passport.use('register', new LocalStrategy({ passReqToCallback: true }, async (req, username, password, done) => {
 
@@ -151,30 +156,17 @@ function isAuth(req, res, next) {
     res.redirect('/login')
   }
 }
+
 /* --------------------- MONGO SESSION --------------------------- */
 const advancedOptions = { useNewUrlParser: true, useUnifiedTopology: true };
 const admin = process.env.MONGO_USER;
 const password = process.env.MONGO_PASSWORD;
 const url = 'mongodb+srv://'+admin.toString()+':'+password.toString()+'@cluster0.rzdyo.mongodb.net/sesiones?retryWrites=true&w=majority';
 
-var hbs = exphbs.create({
-  extname: "hbs",
-  defaultLayout: 'main.hbs',
-  allowedProtoMethods: {
-    trim: true
-  }
-});
-app.engine('hbs', hbs.engine);
-app.set('view engine', 'hbs');
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static("./public"));
-app.use(cookieParser());
 app.use(session({
   store: MongoStore.create({
     mongoUrl: url,
-    ttl: 10 * 60, // = 10 min. Default
+    ttl: parseInt(process.env.TIME_SESSION), // = 10 min. Default
     mongoOptions: advancedOptions }),
   secret: 'secret',
   resave: false,
@@ -184,9 +176,12 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use("/productos", isAuth, productRoutes);
-app.use("/productos/agregar", isAuth, frontRoutes);
-app.use('/carrito', isAuth, productCarritoRoutes);
+app.use("/productos", isAuth, require("./routes/products.routes"));
+app.use("/productos/agregar", isAuth, require('./routes/agregarProducto.routes'));
+app.use('/carrito', isAuth, require("./routes/carrito.routes"));
+app.get('/', (req, res) => {
+  res.render('login')
+})
 
 /* --------------------- PASSPORT ROUTES --------------------------- */
 app.post('/login', passport.authenticate('login', { failureRedirect: '/faillogin', successRedirect: '/productos/listar' }))
@@ -214,8 +209,69 @@ app.get('/logout', (req, res) => {
   }, 2000);
 })
 
+app.get('/chat', isAuth, (req, res) => {
+  if (!req.user.contador){
+    req.user.contador = 0
+  }
+  // res.status(200)
+  res.sendFile('./index.html', { root:__dirname })
+});
+/* --------- INFO ---------- */
+app.get('/info', compression(), (req, res) => {
+  try {
+    console.log('Console log INFO')
+    logger.info('Mensaje info -----------------> OK');
+    loggerWarn.warn('Mensaje warn -----------------> OK')
+    const numCPUs = require('os').cpus().length
+    res.render('info', {
+      user: req.user,
+      info: process,
+      argv: process.argv,
+      memoryUsage: process.memoryUsage(),
+      numCPUs: numCPUs,
+    });
+  } catch(err) {
+    loggerWarn.warn('Error message: ' + err)
+    logger.info('Error message: ' + err);
+    loggerError.error('Error message: ' + err);
+  }
+});
+
+app.get('/config', (req, res) => {
+  try {
+    res.render('config', {
+      user: req.user,
+      info: process,
+      NODE_ENV: process.env.NODE_ENV,
+      port: process.env.PORT,
+      url: process.env.MONGODB_URL,
+      mail: process.env.GMAIL_EMAIL,
+      timeSession: process.env.TIME_SESSION
+    });
+  } catch(err) {
+ 
+  }
+})
+
+const MensajeDB = require('./controllers/mensajesDb')
+const mensajesDB = new MensajeDB()
+
+io.on('connection', async socket => {
+  console.log('Un cliente se ha conectado')
+  let messages = await mensajesDB.listar()
+  socket.emit('messages', messages)
+
+  socket.on('new-message', async data => {
+      messages.push(data)
+      await mensajesDB.insertar(messages)
+      io.sockets.emit('messages', messages)
+  })
+})
+
 const port = parseInt(process.argv[2]) || process.env.PORT || 8080;
-const server = app.listen(port, () => {
+
+console.log(process.env.NODE_ENV)
+const server = httpServer.listen(port, () => {
   logger.info('El servidor esta corriendo en el puerto: ' + server.address().port);
 });
 server.on('error', err => {

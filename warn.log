@@ -1,2 +1,49 @@
 {"level":40,"time":1628463243638,"pid":6653,"hostname":"DESKTOP-CD4IMJA","msg":"Login -----------------> OK"}
 {"level":40,"time":1628471386637,"pid":10202,"hostname":"DESKTOP-CD4IMJA","msg":"Login -----------------> OK"}
+{"level":40,"time":1632110772850,"pid":2456,"hostname":"LAPTOP-3FNR6K70","msg":"Register -----------------> OK"}
+{"level":40,"time":1632281526582,"pid":1373,"hostname":"LAPTOP-3FNR6K70","msg":"Register -----------------> OK"}
+{"level":40,"time":1632281551481,"pid":1373,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}
+{"level":40,"time":1632844648665,"pid":737,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}
+{"level":40,"time":1632845740557,"pid":1511,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}
+{"level":40,"time":1632847457159,"pid":2369,"hostname":"LAPTOP-3FNR6K70","msg":"Error message: TypeError: daoUsuarios.find is not a function"}
+{"level":40,"time":1632847505404,"pid":2485,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}
+{"level":40,"time":1632848371547,"pid":3384,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}
+{"level":40,"time":1632869825986,"pid":732,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}
+{"level":40,"time":1633108523377,"pid":392,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}
+{"level":40,"time":1633111095100,"pid":3039,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}
+{"level":40,"time":1633111460765,"pid":3332,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}
+{"level":40,"time":1633122028797,"pid":5300,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}
+{"level":40,"time":1633122183124,"pid":5703,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}
+{"level":40,"time":1633122214501,"pid":5703,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}
+{"level":40,"time":1633122241627,"pid":5703,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}
+{"level":40,"time":1633122866402,"pid":6048,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}
+{"level":40,"time":1633138234342,"pid":6483,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}
+{"level":40,"time":1633138419226,"pid":6483,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}
+{"level":40,"time":1633138639045,"pid":6483,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}
+{"level":40,"time":1633150307121,"pid":7561,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}
+{"level":40,"time":1633150924357,"pid":8405,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}
+{"level":40,"time":1633151577695,"pid":8834,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}
+{"level":40,"time":1633152290437,"pid":10117,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}
+{"level":40,"time":1633153024751,"pid":11216,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}
+{"level":40,"time":1633153712518,"pid":12199,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}
+{"level":40,"time":1633179977378,"pid":505,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}
+{"level":40,"time":1633184345534,"pid":1963,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}
+{"level":40,"time":1633184985866,"pid":2835,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}
+{"level":40,"time":1633185056394,"pid":2835,"hostname":"LAPTOP-3FNR6K70","msg":"Register -----------------> OK"}
+{"level":40,"time":1633185756890,"pid":3607,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}
+{"level":40,"time":1633192025145,"pid":6517,"hostname":"LAPTOP-3FNR6K70","msg":"Error message: MongooseError: Query was already executed: usuarios.find({})"}
+{"level":40,"time":1633192402945,"pid":7704,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}
+{"level":40,"time":1633192612350,"pid":8260,"hostname":"LAPTOP-3FNR6K70","msg":"Mensaje warn -----------------> OK"}
+{"level":40,"time":1633276302221,"pid":618,"hostname":"LAPTOP-3FNR6K70","msg":"Mensaje warn -----------------> OK"}
+{"level":40,"time":1633276311119,"pid":618,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}
+{"level":40,"time":1633276322692,"pid":618,"hostname":"LAPTOP-3FNR6K70","msg":"Mensaje warn -----------------> OK"}
+{"level":40,"time":1633295471023,"pid":3829,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}
+{"level":40,"time":1633295504053,"pid":3829,"hostname":"LAPTOP-3FNR6K70","msg":"Mensaje warn -----------------> OK"}
+{"level":40,"time":1633295600509,"pid":3829,"hostname":"LAPTOP-3FNR6K70","msg":"Mensaje warn -----------------> OK"}
+{"level":40,"time":1633308930616,"pid":6528,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}
+{"level":40,"time":1633312059645,"pid":7315,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}
+{"level":40,"time":1633312728425,"pid":8079,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}
+{"level":40,"time":1633314066457,"pid":8555,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}
+{"level":40,"time":1633314693173,"pid":9852,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}
+{"level":40,"time":1633315447390,"pid":11417,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}
+{"level":40,"time":1633316249181,"pid":13496,"hostname":"LAPTOP-3FNR6K70","msg":"Login -----------------> OK"}

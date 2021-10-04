@@ -1,5 +1,4 @@
 {{#if user}}  
-
     <div class="form-group">
 
         <label>Bievenido! {{user.username}}</label>
@@ -77,6 +76,7 @@
 
     </div>
 {{else}}
+    <p>Vista de Productos</p>
 
     <div class="form-group">
         <label>Usuario no Logeado</label>
@@ -84,38 +84,35 @@
 
 {{/if}}
 
-<h1>Lista de Productos dentro del Carrito</h1>
-{{#if carritos}}
-    <h1>El carrito tiene: {{carritos.length}} productos.</h1>
-        <form action="/carrito/comprar" method="post" role="form" id="form-comprar">
-            <div class="col">
-                    <td>
-                        <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#cart">
-                            Finalizar Compra 
-                        </button>
-
-                        <button class="clear-cart btn btn-danger">
-                            Limpiar Carrito
-                        </button>
-                    </td>
-            </div>
-            {{#each carritos}}
-                <div class="container">
-                    <div class="row">
-                        <div class="col">
-                            <div class="card" style="width: 20rem;">
-                                <img class="card-img-top" src={{{producto.foto}}} alt="Card image cap">
-                                <div class="card-block">
-                                    <h4 class="card-title" >{{producto.nombre}}</h4>
-                                    <p class="card-text" >Price: ${{producto.precio}}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            {{/each}}
-        </form>
+{{#if info}}  
+        <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">
+                    NODE_ENV : 
+                </th>
+                <th scope="col">
+                    Puerto : 
+                </th>
+                <th scope="col">Url Database : </th>
+                <th scope="col">Mail Receptor : </th>
+                <th scope="col">
+                    Tiempo de Session : 
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{NODE_ENV}}</td>
+                <td>{{port}}</td>
+                <td>{{url}}</td>
+                <td>{{mail}}</td> 
+                <td>{{timeSession}}</td> 
+            </tr>
+        </tbody>
+    </table>
 {{else}}
-    <p>No hay ordenes en el carrito</p>
+    <p>
+        process NO
+    </p>
 {{/if}}
-

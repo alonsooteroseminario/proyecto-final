@@ -1,20 +1,20 @@
-const ProductFs = require("./productFs");
-const ProductMemoria = require("./productoMemoria");
-const ProductMariaDBLocal = require('./productoMariaDBLocal');
-const ProductMariaDBaaS = require('./productoMariaDBaaS');
+const ProductFs = require("./productoDb/productFs");
+const ProductMemoria = require("./productoDb/productoMemoria");
+const ProductMariaDBLocal = require('./productoDb/productoMariaDBLocal');
+const ProductMariaDBaaS = require('./productoDb/productoMariaDBaaS');
 
-const ProductMongoDBLocal = require('./productoMongoDBLocal');
-const ProductMongoDBaaS = require('./productoMongoDBaaS');
-const ProductFirebase = require('./productoFirebase');
+const ProductMongoDBLocal = require('./productoDb/productoMongoDBLocal');
+const ProductMongoDBaaS = require('./productoDb/productoMongoDBaaS');
+const ProductFirebase = require('./productoDb/productoFirebase');
 
-const CarritoFs = require("./carritoFs");
-const CarritoMemoria = require("./carritoMemoria");
-const CarritoMariaDBLocal = require('./carritoMariaDBLocal');
-const CarritoMariaDBaaS = require('./carritoMariaDBaaS');
+const CarritoFs = require("./carritoDb/carritoFs");
+const CarritoMemoria = require("./carritoDb/carritoMemoria");
+const CarritoMariaDBLocal = require('./carritoDb/carritoMariaDBLocal');
+const CarritoMariaDBaaS = require('./carritoDb/carritoMariaDBaaS');
 
-const CarritoMongoDBLocal = require('./carritoMongoDBLocal');
-const CarritoMongoDBaaS = require('./carritoMongoDBaaS');
-const CarritoFirebase = require('./carritoFirebase');
+const CarritoMongoDBLocal = require('./carritoDb/carritoMongoDBLocal');
+const CarritoMongoDBaaS = require('./carritoDb/carritoMongoDBaaS');
+const CarritoFirebase = require('./carritoDb/carritoFirebase');
 
 const { mysqlLocal:configLocal } = require('../db/config')
 const { mysqlDBaaS:configDBaaS } = require('../db/config')

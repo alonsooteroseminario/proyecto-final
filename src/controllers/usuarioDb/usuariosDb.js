@@ -1,22 +1,11 @@
 const mongoose = require('mongoose');
 
-const admin = process.env.MONGO_USER;
-const password = process.env.MONGO_PASSWORD;
-const url = 'mongodb+srv://'+admin.toString()+':'+password.toString()+'@cluster0.rzdyo.mongodb.net/ecommerce?retryWrites=true&w=majority';
+const url = process.env.MONGODB_URL
+console.log(url)
 
 // const url = 'mongodb://localhost:27017/weclash';
 
-const esquemaUsuario = new mongoose.Schema({
-  nombre: { type: String, require: true, max: 100 },
-  username: { type: String, require: true, max: 100 },
-  edad: { type: String, require: true, max: 100 },
-  foto: { type: String, require: true, max: 100 },
-  telefono: { type: String, require: true, max: 100 },
-  hashPassword: { type: String, require: true, max: 100 },
-  direccion: { type: String, require: true, max: 100 }
-})
-
-const daoUsuarios = mongoose.model('usuarios', esquemaUsuario);
+const {daoUsuarios} = require('../../models/esquemaUsuario')
 
 class UsuarioDB {
   constructor() {

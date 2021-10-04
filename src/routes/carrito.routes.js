@@ -3,7 +3,10 @@ const nodemailer = require('nodemailer');
 require('dotenv').config();
 const router = express.Router();
 const Factory = require("../controllers/factory");
+const OrdenesDB = require('../controllers/ordenesDb');
+const ordenesDb = new OrdenesDB()
 const factory = new Factory();
+
 
 const tipoPersistencia = 6;
 
@@ -11,14 +14,7 @@ const product = factory.persistencia(tipoPersistencia,"productos");
 const carrito = factory.persistencia(tipoPersistencia,"carrito");
 
 /* --------------------- EMAILS Y MESSAGING --------------------------- */
-const transporter = nodemailer.createTransport({
-  host: 'smtp.ethereal.email',
-  port: 587,
-  auth: {
-      user: process.env.NODEMAIL_USER.toString(),
-      pass: process.env.NODEMAIL_PASS.toString()
-  }
-});
+const transporter = require('../middlewares/emails');
 const accountSid = process.env.ACCOUNT_SID_TWILIO.toString();
 const authToken = process.env.AUTHTOKEN_TWILIO.toString();
 
@@ -144,11 +140,20 @@ router.post('/comprar', async (req, res) => {
 
   const currentCarrito = await carrito.getByUsername(user.username);
 
+  let ordenes = await ordenesDb.listar()
+
   let totalHtml = ''
-  // console.log(user)
-  // console.log(currentCarrito)
+  let dataNombre = []
+  let dataPrecio = []
+  let dataDescription = []
+
   for (let index = 0; index < currentCarrito.length; index++) {
     const element = currentCarrito[index];
+
+    dataNombre.push(element.nombre)
+    dataPrecio.push(element.precio)
+    dataDescription.push(element.descripcion)
+
     let iterableHtml = `<------------------------------------------->
                           <p>  Nombre : ${element.nombre} </p>  
                           <p>  Descripción : ${element.descripcion} </p>
@@ -192,6 +197,17 @@ router.post('/comprar', async (req, res) => {
     // console.log(info)
   });
 
+  let ordenesData = {
+    id: ordenes.length + 1,
+    items: dataNombre,
+    descriptionId: dataDescription,
+    precioId: dataPrecio,
+    fyh: new Date().toLocaleDateString() + new Date().toLocaleTimeString(),
+    estado: 'Finalizada',
+    comprador: email 
+  }
+  console.log(ordenesData)
+  await ordenesDb.insertar(ordenesData);
   res.redirect('/carrito/comprafinalizada')
 })
 router.get('/carrito/comprafinalizada', async (req, res) => {

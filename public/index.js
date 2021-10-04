@@ -1,5 +1,3 @@
-const socket = io();
-
 document.getElementById('agregar-carrito').addEventListener('click', () => {
     const producto = {
         nombre: document.getElementById('td-nombre').textContent,
@@ -9,6 +7,7 @@ document.getElementById('agregar-carrito').addEventListener('click', () => {
       socket.emit('boton', producto);
       console.log(producto)
 })
+
 // document.getElementById('borrar-carrito').addEventListener('click', () => {
 
 // })
@@ -27,7 +26,7 @@ document.getElementById('mySelect').addEventListener('change', (req, res) => {
     document.getElementById('telefono').value(value);
 });
 
-
+const socket = io.connect();
 
 function pickForm(e) {
     const producto = {
@@ -80,29 +79,30 @@ socket.on('productos', data => {
         document.getElementById('productos').innerHTML = '<p>nada para mostrar</p>';
     }
 })
-socket.on('messages', data => {
-    // console.log(data);
-    render(data);
-}); 
-function render(data) {
+// socket.on('messages', data => {
+//     console.log(data);
+//     render(data);
+// }); 
+// function render(data) {
 
-    const html = data.map((elem, index) => {
-        return(`<div style="color:rgb(128,64,0);">
-                <strong style="color:rgb(0,0,255);">${elem.author}</strong>
-                [(${elem.date})]:
-                <em style="color:rgb(0,143,57);">${elem.text}</em> </div>`)
-    }).join(" ");
-    document.getElementById('messages').innerHTML = html;
-}
-function addMessage(e) {
-    const mensaje = {
-      author: document.getElementById('username').value,
-      text: document.getElementById('texto').value
-    };
-    socket.emit('new-message', mensaje);
-    document.getElementById('texto').value = ''
-    document.getElementById('texto').focus()
+//     const html = data.map((elem, index) => {
+//         return(`<div style="color:rgb(128,64,0);">
+//                 <strong style="color:rgb(0,0,255);">${elem.author}</strong>
+//                 [(${elem.date})]:
+//                 <em style="color:rgb(0,143,57);">${elem.text}</em> </div>`)
+//     }).join(" ");
+//     document.getElementById('messages').innerHTML = html;
+// }
+// function addMessage(e) {
+//     const mensaje = {
+//       author: document.getElementById('username').value,
+//       text: document.getElementById('texto').value
+//     };
+//     // console.log(mensaje)
+//     socket.emit('new-message', mensaje);
+//     document.getElementById('texto').value = ''
+//     document.getElementById('texto').focus()
 
-    return false;
-}
+//     return false;
+// }
   
