@@ -1,4 +1,5 @@
 const express = require('express');
+const { render } = require('pug');
 const router = express.Router();
 const Factory = require("../controllers/factory");
 const factory = new Factory();
@@ -52,13 +53,20 @@ router.post("/listar", async (req, res) => {
 // buscar por Id
 router.get("/listar/:id", async (req, res) => {
   const { id } = req.params;
+  const user = req.user;
   const currentProduct = await product.getById(id)
-    if (currentProduct) {
-      return res.json(currentProduct);
-    }
-    res.status(404).json({
-      error: "producto no encontrado",
-    });
+  if (currentProduct.length != 0) {
+    // return res.render('productoUnico', {
+    //   currentProduct: currentProduct,
+    //   user: user
+    // });
+    res.json(currentProduct);
+  } else {
+    res.render('productoUnico',{
+      currentProduct: currentProduct,
+      user: user
+    })
+  }
 });
 // actualizar producto existente (ADMIN)
 router.put("/actualizar/:id", async (req, res) => {
