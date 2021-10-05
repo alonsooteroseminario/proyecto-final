@@ -107,7 +107,7 @@ router.post("/agregar", async (req, res) => {
 //borrar orden con un boton
 router.post("/borrar/:id", async (req, res) => {
     res.redirect('http://localhost:8080/carrito/listar')
-    console.log(req.params.id)
+    // console.log(req.params.id)
     await carrito.remove(parseInt(req.params.id));
 });
 router.post('/comprar', async (req, res) => {
