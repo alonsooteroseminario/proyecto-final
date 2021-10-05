@@ -116,11 +116,12 @@ class CarritoDB {
   }
 
   remove(id) {
-    return daoCarritos.deleteOne({carId: id}, (err,res) => {
+    return daoCarritos.deleteMany({id: id}, (err,res) => {
       if (err) {
         console.log(err)
       } else {
         console.log(res)
+        // return daoCarritos.deleteMany({id: id})
       }
     });
   }

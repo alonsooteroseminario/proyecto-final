@@ -63,7 +63,7 @@ const {daoProductos} = require('../../models/esquemaProducto');
         if (err) {
           console.log(err)
         } else {
-          console.log(res)
+          // console.log(res)
         }
       });
     }
