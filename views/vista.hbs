@@ -177,6 +177,9 @@
                                 </form>
                             </td>
                             <td>
+                                <a href="/productos/listar/{{{id}}}"> Ver Detalle del producto </a>
+                            </td>
+                            <td>
                                 <form action="/productos/borrar/{{{id}}}?id={{{id}}}" method="delete" role="form">
                                     {{!-- <input type="hidden" class="form-control" type="number" name="id" value={{{id}}} > --}}
                                     <button id='borrar-producto' type="submit" class="form-control">Eliminar Producto</button>

@@ -7,19 +7,31 @@ document.getElementById('agregar-carrito').addEventListener('click', () => {
       socket.emit('boton', producto);
       console.log(producto)
 })
+let id = document.getElementById('input-id');
+// mutation & variables para agregar producto
+var mutation = `mutation{
+    deleteCarritoGraphql(id: ${id}) {
 
-// document.getElementById('borrar-carrito').addEventListener('click', () => {
+    }
+}`
+var variables = {}
+const fetchPOSTdata = async () => {
+    const res = await fetch('http://localhost:8080/carrito/graphql', {
+        method: 'POST',
+        headers:{
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+        body: JSON.stringify({
+                    mutation,
+                    variables 
+                })
+    });
+    // const data = await res.json();
+}
+// event listener, ejecutar  funcion() para traer info del formulario
+document.getElementById('miBoton').addEventListener('click', () => { fetchPOSTdata() });
 
-// })
-// document.getElementById('ver-detalle').addEventListener('click', () => {
-    
-// })
-// document.getElementById('actualizar-producto').addEventListener('click', () => {
-    
-// })
-// document.getElementById('borrar-producto').addEventListener('click', () => {
-    
-// })
 document.getElementById('mySelect').addEventListener('change', (req, res) => {
     var value = req;
     console.log(req);
@@ -79,30 +91,4 @@ socket.on('productos', data => {
         document.getElementById('productos').innerHTML = '<p>nada para mostrar</p>';
     }
 })
-// socket.on('messages', data => {
-//     console.log(data);
-//     render(data);
-// }); 
-// function render(data) {
-
-//     const html = data.map((elem, index) => {
-//         return(`<div style="color:rgb(128,64,0);">
-//                 <strong style="color:rgb(0,0,255);">${elem.author}</strong>
-//                 [(${elem.date})]:
-//                 <em style="color:rgb(0,143,57);">${elem.text}</em> </div>`)
-//     }).join(" ");
-//     document.getElementById('messages').innerHTML = html;
-// }
-// function addMessage(e) {
-//     const mensaje = {
-//       author: document.getElementById('username').value,
-//       text: document.getElementById('texto').value
-//     };
-//     // console.log(mensaje)
-//     socket.emit('new-message', mensaje);
-//     document.getElementById('texto').value = ''
-//     document.getElementById('texto').focus()
-
-//     return false;
-// }
   

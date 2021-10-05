@@ -1,12 +1,12 @@
 const express = require('express');
-const nodemailer = require('nodemailer');
 require('dotenv').config();
 const router = express.Router();
 const Factory = require("../controllers/factory");
 const OrdenesDB = require('../controllers/ordenesDb');
 const ordenesDb = new OrdenesDB()
 const factory = new Factory();
-
+var { graphqlHTTP }  = require('express-graphql');
+var { buildSchema } = require('graphql');
 
 const tipoPersistencia = 6;
 
@@ -20,18 +20,14 @@ const authToken = process.env.AUTHTOKEN_TWILIO.toString();
 
 const client = require('twilio')(accountSid, authToken);
 
-//Ver todos los productos
+//Ver todos los carritos
 router.get("/listar", async (req, res) => {
   const user = req.user;
-  const products = await product.get()
-
-  //Aqui se debe filtrar deacuerdo al usuario user
   const currentCarrito = await carrito.getByUsername(user.username);
 
   if (tipoPersistencia == 2 || tipoPersistencia == 3 || tipoPersistencia == 4 || tipoPersistencia == 5 || tipoPersistencia == 6) {
     res.render('carritoSQL', {
       active: "carritoSQL",
-      products: products,
       carritos: currentCarrito,
       user: user
     });
@@ -39,30 +35,29 @@ router.get("/listar", async (req, res) => {
   else {
     res.render('carrito', {
       active: "carrito",
-      products: products,
       carritos: currentCarrito,
       user: user
     });
   }
 });
-//Todos o No hay productos cargados
-router.get("/listar", async (req, res) => {
-    const carritos = await carrito.get();
-      if (!carritos) {
-        return res.status(404).json({
-          error: "no hay ordenes cargadas en el carrito",
-        });
-      }
-      res.json(carritos);
+// buscar orden por Id
+router.get("/listar/:id", async (req, res) => {
+  const { id } = req.params;
+  const currentOrden = await carrito.getById(id)
+    if (currentOrden) {
+      return res.json(currentOrden);
+    }
+    res.status(404).json({
+      error: "orden no encontrada",
+    });
 });
 // agregar orden al carrito
 router.post("/agregar", async (req, res) => {
   const user = req.user;
   const data = req.body;
+  console.log(data)
   const carritos = await carrito.get()
-  // console.log(carritos);
   const products = await product.get()
-  // console.log(products);
   let currentProduct = {};
   let objeto = {};
   if (tipoPersistencia == 7) {
@@ -105,30 +100,15 @@ router.post("/agregar", async (req, res) => {
       }
     }  
   }
-  // console.log(currentProduct);
-    if(await carrito.add(objeto.producto)) {
-      if (data.form === "1"|| tipoPersistencia === 5) return res.redirect('http://localhost:8080/carrito/listar');
-      res.status(201).json(objeto);
-    }
-    res.status(400).send();
+  await carrito.add(objeto.producto)
+  res.redirect('http://localhost:8080/carrito/listar')
 });
-// buscar orden por Id
-router.get("/listar/:id", async (req, res) => {
-    const { id } = req.params;
-    const currentOrden = await carrito.getById(id)
-      if (currentOrden) {
-        return res.json(currentOrden);
-      }
-      res.status(404).json({
-        error: "orden no encontrada",
-      });
-});
+
 //borrar orden con un boton
-router.delete("/borrar/:id", async (req, res) => {
-    const { id } = req.params;
-    const currentOrden = await carrito.getById(id);
-      res.json(currentOrden);
-      carrito.remove(id);
+router.post("/borrar/:id", async (req, res) => {
+    res.redirect('http://localhost:8080/carrito/listar')
+    console.log(req.params.id)
+    await carrito.remove(parseInt(req.params.id));
 });
 router.post('/comprar', async (req, res) => {
   const user = req.user;
@@ -210,11 +190,88 @@ router.post('/comprar', async (req, res) => {
   await ordenesDb.insertar(ordenesData);
   res.redirect('/carrito/comprafinalizada')
 })
-router.get('/carrito/comprafinalizada', async (req, res) => {
+router.get('/comprafinalizada', async (req, res) => {
   const user = req.user;
   res.render('comprafinalizada', {
     user: user
   })
 })
+
+var schema = buildSchema(`
+    type Query {
+        carritos: [Carrito]
+    },
+    type Mutation {
+        updateCarritoGraphql(
+            username: String!,
+            carId: Int!,
+            carTimestamp: String!,
+            id: Int!,
+            timestamp: String!,
+            nombre: String!, 
+            descripcion: String!, 
+            codigo: String!,
+            foto: String!,
+            precio: Int!,
+            stock: Int!
+        ): Carrito
+        deleteCarritoGraphql(id: Int!): Carrito
+        listarCarritoIdGraphql(id: Int!): Carrito
+    },
+    type Carrito {
+        username: String
+        carId: Int
+        carTimestamp: String
+        id: Int
+        timestamp: String
+        nombre: String
+        descripcion: String
+        codigo: String
+        foto: String
+        precio: Int
+        stock: Int
+    }    
+`);
+
+var root = {
+  carritos: getCarritos,
+  updateCarritoGraphql: updateCarritoGraphql,
+  deleteCarritoGraphql: deleteCarritoGraphql,
+  listarCarritoIdGraphql: listarCarritoIdGraphql
+};
+
+//funcion para POST }
+var getCarritos = async function() {
+  console.log(await carrito.listar())
+  return await carrito.listar();
+}
+var updateCarritoGraphql = async function({ 
+      username, 
+      carId, 
+      carTimestamp, 
+      id, 
+      timestamp,
+      nombre, 
+      descripcion, 
+      codigo,
+      foto,
+      precio,
+      stock 
+    }) {
+  let data = {username,carId,carTimestamp,id,timestamp,nombre,descripcion,codigo,foto,precio,stock}
+  return await carrito.update(carId, data)
+}
+var deleteCarritoGraphql = async function({id}) {
+  return await carrito.remove(id);;
+};
+var listarCarritoIdGraphql = async function({id}) {
+  return await carrito.getById(id);
+}
+
+router.use('/graphql', graphqlHTTP({
+  schema: schema,
+  rootValue: root,
+  graphiql: true
+}));
 
 module.exports = router;

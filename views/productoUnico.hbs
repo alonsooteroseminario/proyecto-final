@@ -1,5 +1,4 @@
 {{#if user}}  
-
     <div class="form-group">
 
         <label>Bievenido! {{user.username}}</label>
@@ -77,6 +76,7 @@
 
     </div>
 {{else}}
+    <p>Vista de Productos</p>
 
     <div class="form-group">
         <label>Usuario no Logeado</label>
@@ -84,44 +84,60 @@
 
 {{/if}}
 
-<h1>Lista de Productos dentro del Carrito</h1>
-{{#if carritos}}
-    <h1>El carrito tiene: {{carritos.length}} productos.</h1>
-        <form action="/carrito/comprar" method="post" role="form" id="form-comprar">
-            <div class="col">
-                    <td>
-                        <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#cart">
-                            Finalizar Compra 
-                        </button>
+{{#if currentProduct}}
 
-                        <button class="clear-cart btn btn-danger">
-                            Limpiar Carrito
-                        </button>
-                    </td>
+
+        <script>
+            (function($) {
+
+            var tabs =  $(".tabs li a");
+        
+            tabs.click(function() {
+                var content = this.hash.replace('/','');
+                tabs.removeClass("active");
+                $(this).addClass("active");
+            $("#content > aside").hide();
+            $(content).fadeIn(200);
+            });
+
+        })(jQuery);
+        </script>
+
+        <div id="wrap">
+        <div id="product_layout_3">
+            <div class="product_image">
+            <div class="main_image">
+                <img src={{{foto}}}  />
             </div>
-            {{#each carritos}}
-                <div class="container">
-                    <div class="row">
-                        <div class="col">
-                            <div class="card" style="width: 20rem;">
-                                <img class="card-img-top" src={{{producto.foto}}} alt="Card image cap">
-                                <div class="card-block">
-                                    <h4 class="card-title" >{{producto.nombre}}</h4>
-                                    <p class="card-text" >Price: ${{producto.precio}}</p>
-                                </div>
-                                <form action="/carrito/borrar/{{{id}}}" method="get" role="form">
-                                    <td>
-                                        <input type="hidden" class="form-control" type="number" name="id" value={{{producto.id}}} >
-                                        <button type="submit" class="form-control">Borrar del Carrito</button>
-                                    </td>
-                                </form>
-                            </div>
+            </div>
+            <div class="product_desc">
+            <h1> Nombre : {{nombre}} </h1>
+            <span class="id"> Codigo ProdId : $ {{codigo}} </span>
+            <span class="price"> Precio : $ {{precio}} </span>
+            <span class="stars"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half"></i></span>
+            <div class="product_options">
+                <div class="buying">
+                        <div class="quantity">
+                        <label for="quantity">Cantidad</label>
+                        <input type="text">
                         </div>
-                    </div>
+                        <div class="cart">
+                        <a href="#" class="add">Agregar al Carrito <i class="fa fa-shopping-cart fa-lg"></i></a>
+                        </div>
                 </div>
-            {{/each}}
-        </form>
+                <div class="description">
+                    <p> {{description}} </P>
+                </div>
+            </div>
+            </div>
+        </div>
+        </div>
+  
 {{else}}
-    <p>No hay ordenes en el carrito</p>
+
+
+            <h1> El producto buscado no existe! </h1>
+
+
 {{/if}}
 

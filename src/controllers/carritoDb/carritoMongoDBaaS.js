@@ -81,7 +81,7 @@ class CarritoDB {
     }).lean();
   }
 
-  update(id, data) {
+  update(carId, data) {
 
     const nuevoId = data.id;
     const nuevoTimestamp = data.timestamp;
@@ -93,9 +93,9 @@ class CarritoDB {
     const nuevoStock = data.stock;
     const nuevoUsername = data.username;
 
-    return daoCarritos.updateOne({carId: id}, {$set: {
+    return daoCarritos.updateOne({carId: carId}, {$set: {
       username: nuevoUsername,
-      carId: id,
+      carId: carId,
       carTimestamp: Date.now(),
       id: nuevoId,
       timestamp: nuevoTimestamp,
