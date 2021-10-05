@@ -32,19 +32,14 @@ router.get("/listar", async (req, res) => {
     res.json(products);
 });
 // agregar producto nuevo (ADMIN)
-router.post("/listar", async (req, res) => {
+router.post("/agregar", async (req, res) => {
   const data = req.body;
-
   if (!admin) {
-    if(await product.add(data)) {
-      // console.log('AQUI')
-      if (data.form === "1" || tipoPersistencia === 5) return res.redirect('http://localhost:8080/productos/agregar');
-      res.status(201).json(data);
-    }
-    res.status(400).send();
+    await product.add(data)
+    res.redirect('http://localhost:8080/productos/agregar');
   }
   else{
-    res.status(404).json({
+    res.json({
       error: -1,
       descripcion: "No cuenta con permisos de administrador para ingresar a esta ruta"
     });
