@@ -81,12 +81,11 @@ router.put("/actualizar/:id", async (req, res) => {
     }
 });
 // borrar producto (ADMIN)
-router.delete("/borrar/:id", async (req, res) => {
+router.post("/borrar/:id", async (req, res) => {
     const { id } = req.params;
-    const currentProduct = await product.getById(id);
     if (!admin){
-      res.json(currentProduct);
-      product.remove(id);
+      res.redirect('http://localhost:8080/productos/listar')
+      await product.remove(id);
     }
     else{
       res.status(404).json({
