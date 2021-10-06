@@ -59,9 +59,9 @@ const {daoProductos} = require('../../models/esquemaProducto');
     }
   
     getById(id) {
-      return daoProductos.find({id: id}, (err,res) => {
+      return daoProductos.findOne({id: id}, (err,res) => {
         if (err) {
-          console.log(err)
+          // console.log(err)
         } else {
           // console.log(res)
         }

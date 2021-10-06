@@ -49,13 +49,14 @@ router.post("/agregar", async (req, res) => {
 router.get("/listar/:id", async (req, res) => {
   const { id } = req.params;
   const user = req.user;
+  // console.log(id)
   const currentProduct = await product.getById(id)
   if (currentProduct.length != 0) {
-    // return res.render('productoUnico', {
-    //   currentProduct: currentProduct,
-    //   user: user
-    // });
-    res.json(currentProduct);
+    res.render('productoUnico', {
+      currentProduct: currentProduct,
+      user: user
+    });
+    // res.json(currentProduct);
   } else {
     res.render('productoUnico',{
       currentProduct: currentProduct,
@@ -64,17 +65,17 @@ router.get("/listar/:id", async (req, res) => {
   }
 });
 // actualizar producto existente (ADMIN)
-router.put("/actualizar/:id", async (req, res) => {
+router.post("/actualizar/:id", async (req, res) => {
     const data = req.body;
     const { id } = req.params;
     if (!admin) {
       if(await product.update(id, data)) {
-        res.status(201).json(data);
+        res.redirect('http://localhost:8080/productos/listar')
       }
-      res.status(400).send();
+      res.status(400)
     }
     else{
-      res.status(404).json({
+      res.json({
         error: -1,
         descripcion: "No cuenta con permisos de administrador para ingresar a esta ruta"
       });
