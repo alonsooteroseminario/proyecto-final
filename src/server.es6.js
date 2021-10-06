@@ -225,11 +225,15 @@ app.get('/chat/:id', isAuth, async (req, res) => {
   let messages = await mensajesDB.listar()
   let menssagesFiltrados = messages.filter( msg => msg.author == id)
 
-  res.render('chat', {
-    user: req.user,
-    userNombre: req.user.username,
-    menssagesFiltrados: menssagesFiltrados
-  })
+  if  (req.user.username == id) {
+    res.render('chat', {
+      user: req.user,
+      userNombre: req.user.username,
+      menssagesFiltrados: menssagesFiltrados
+    })
+  } else {
+    res.json({error: 'ruta no authorizada'})
+  }
 })
 
 
