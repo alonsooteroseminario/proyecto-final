@@ -89,49 +89,13 @@
     <div class="container">
         <div class="row" id="search">
 
-            <form id="search-form" action="nombre/nombre?" method="GET" enctype="multipart/form-data" role="form">
+            <form id="search-form" action="/productos/listar/filtrar" method="post" role="form">
                 <div class="form-group col-xs-9">
-                    <input class="form-control" type="text" placeholder="Filtrar por Nombre" name="nombre"/>
+                    <input class="form-control" type="text" placeholder="Filtrar por Categoria" name="categoria"/>
                 </div>
                 <div class="form-group col-xs-3">
-                    <input type="hidden" name="form" value="1" />
-                    <button type="submit" class="btn btn-block btn-primary">Filtrar por Nombre</button>
-                </div>
-            </form>
-
-            <form id="search-form" action="codigo/codigo?" method="GET" enctype="multipart/form-data" role="form">
-                <div class="form-group col-xs-9">
-                    <input class="form-control" type="text" placeholder="Filtrar por Código" name="codigo"/>
-                </div>
-                <div class="form-group col-xs-3">
-                    <input type="hidden" name="form" value="1" />
-                    <button type="submit" class="btn btn-block btn-primary">Filtrar por Código</button>
-                </div>
-            </form>
-
-            <form id="search-form" action="productos/precio/precioInferior/precioSuperior?" method="GET" enctype="multipart/form-data" role="form">
-                <div class="range-filter">
-                    <div class="price-controls">
-                        Rango Superior <input class="min-price" type="text" name="precioSuperior" >
-                        Rango Inferior <input class="max-price" type="text" name="precioInferior" >
-                    </div>
-                    <div class="form-group col-xs-3">
-                        <input type="hidden" name="form" value="1" />
-                        <button type="submit" class="btn btn-block btn-primary">Filtrar por Precio</button>
-                    </div>
-                </div>
-            </form>
-
-            <form id="search-form" action="productos/stock/stockInferior/:stockSuperior?" method="GET" enctype="multipart/form-data" role="form">
-                <div class="range-filter">
-                    <div class="price-controls">
-                        Rango Superior <input class="min-price" type="text" name="stockSuperior">
-                        Rango Inferior <input class="max-price" type="text" name="stockInferior">
-                    </div>
-                    <div class="form-group col-xs-3">
-                        <input type="hidden" name="form" value="1" />
-                        <button type="submit" class="btn btn-block btn-primary">Filtrar por Stock</button>
-                    </div>
+                    {{!-- <input type="hidden" name="form" value="1" /> --}}
+                    <button type="submit" class="btn btn-block btn-primary">Filtrar por Categoria</button>
                 </div>
             </form>
 
@@ -142,12 +106,13 @@
                     <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">nombre</th>
-                            <th scope="col">descripcion</th>
-                            <th scope="col">codigo</th>
-                            <th scope="col">foto</th>
-                            <th scope="col">precio</th>
-                            <th scope="col">stock</th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Descripcion</th>
+                            <th scope="col">Codigo</th>
+                            <th scope="col">Categoria</th>
+                            <th scope="col">Foto</th>
+                            <th scope="col">Precio</th>
+                            <th scope="col">Stock</th>
                             <th scope="col">Accion</th>
                         </tr>
                     </thead>
@@ -161,6 +126,7 @@
                             <td>{{nombre}}</td>
                             <td>{{descripcion}}</td>
                             <td>{{codigo}}</td>
+                            <td>{{categoria}}</td>
                             {{#if foto}}
                             <td><img class="card-img-top" src={{{foto}}} alt="Card image cap" /></td>
                             {{/if}}
@@ -196,6 +162,8 @@
                                     <input class="form-control" type="text" name="descripcion" value={{{descripcion}}} >
                                     <p>Código</p>
                                     <input class="form-control" type="text" name="codigo" value={{{codigo}}} >
+                                    <p>Categoria</p>
+                                    <input class="form-control" type="text" name="categoria" value={{{categoria}}} >
                                     <p>Foto</p>
                                     <input class="form-control" type="text" name="foto" value={{{foto}}} >
                                     <p>Precio</p>
