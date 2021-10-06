@@ -177,14 +177,16 @@
                                 </form>
                             </td>
                             <td>
-                                <a href="/productos/listar/{{{id}}}"> Ver Detalle del producto </a>
+                                <form action="/productos/listar/{{{id}}}" method="get" role="form">
+                                    <button id='borrar-producto' type="submit" class="form-control"> Ver Detalle del producto </button>
+                                </form>
                             </td>
                             <td>
                                 <form action="/productos/borrar/{{{id}}}" method="post" role="form">
                                     {{!-- <input type="hidden" class="form-control" type="number" name="id" value={{{id}}} > --}}
                                     <button id='borrar-producto' type="submit" class="form-control">Eliminar Producto</button>
                                 </form>
-                                <form action="/productos/actualizar/{{{id}}}" method="put" role="form">
+                                <form action="/productos/actualizar/{{{id}}}" method="post" role="form">
                                     <button id='actualizar-producto' type="submit" class="form-control">Actualizar Producto</button>
                                     <p>Id</p>
                                     <input class="form-control" type="text" name="id" value={{{id}}} >
