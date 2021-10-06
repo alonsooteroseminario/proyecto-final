@@ -84,38 +84,7 @@
 
 {{/if}}
 
-{{#if nombre}}
-                <div class="container">
-                    <div class="row">
-                        <div class="col">
-                            <div class="card" style="width: 20rem;">
-                                <img class="card-img-top" src={{{foto}}} alt="Card image cap">
-                                <div class="card-block">
-                                    <h4 class="card-title">{{nombre}}</h4>
-                                    <h4 class="card-title">{{codigo}}</h4>
-                                    <p class="card-text">Price: ${{precio}}</p>
-                                </div>
-                                <div class="buying">
-                                        <div class="quantity">
-                                        <label for="quantity">Cantidad</label>
-                                        <input type="text">
-                                        </div>
-                                        <div class="cart">
-                                        <a href="#" class="add">Agregar al Carrito <i class="fa fa-shopping-cart fa-lg"></i></a>
-                                        </div>
-                                </div>
-                                <div class="description">
-                                    <p> {{description}} </P>
-                                </div>
-                            
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-{{else}}
-            <h3>Producto no encontrado o no existe!</h3>
-{{/if}}
 
 
 

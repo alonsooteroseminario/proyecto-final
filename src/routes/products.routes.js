@@ -49,19 +49,23 @@ router.post("/agregar", async (req, res) => {
 router.get("/listar/:id", async (req, res) => {
   const { id } = req.params;
   const user = req.user;
-  // console.log(id)
   const currentProduct = await product.getById(id)
-  if (currentProduct.length != 0) {
+
+  if (currentProduct) {
     res.render('productoUnico', {
-      currentProduct: currentProduct,
+      foto: currentProduct.foto,
+      nombre: currentProduct.nombre,
+      codigo: currentProduct.codigo,
+      precio: currentProduct.precio,
+      description: currentProduct.description,
       user: user
     });
     // res.json(currentProduct);
   } else {
     res.render('productoUnico',{
-      currentProduct: currentProduct,
       user: user
     })
+    // return res.json({error: 'Producto no existente o no encontrado!'})
   }
 });
 // actualizar producto existente (ADMIN)
