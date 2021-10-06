@@ -55,7 +55,7 @@ router.get("/listar/:id", async (req, res) => {
 router.post("/agregar", async (req, res) => {
   const user = req.user;
   const data = req.body;
-  console.log(data)
+  // console.log(data)
   const carritos = await carrito.get()
   const products = await product.get()
   let currentProduct = {};
@@ -94,6 +94,7 @@ router.post("/agregar", async (req, res) => {
           nombre: currentProduct.nombre,
           descripcion: currentProduct.descripcion,
           codigo: currentProduct.codigo,
+          categoria: currentProduct.categoria,
           foto: currentProduct.foto,
           precio: currentProduct.precio,
           stock: currentProduct.stock

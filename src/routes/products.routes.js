@@ -56,8 +56,9 @@ router.get("/listar/:id", async (req, res) => {
       foto: currentProduct.foto,
       nombre: currentProduct.nombre,
       codigo: currentProduct.codigo,
+      categoria: currentProduct.categoria,
       precio: currentProduct.precio,
-      description: currentProduct.description,
+      descripcion: currentProduct.descripcion,
       user: user
     });
     // res.json(currentProduct);
@@ -99,59 +100,23 @@ router.post("/borrar/:id", async (req, res) => {
       });
     }
 });
-// buscar por codigo
-router.get("/codigo/:codigo", async (req, res) => {
+
+router.post('/listar/filtrar', async (req, res) => {
   const data = req.body;
-  console.log(data);
-  const { codigo } = req.params;
-  // console.log(codigo)
-  const currentProduct = await product.getByCodigo(codigo.toString())
-  // if (data.form === "1") return res.redirect('http://localhost:8080/productos/listar');
-  // console.log(currentProduct);
-    if (currentProduct) {
-      return res.json(currentProduct);
-    }
-    res.status(404).json({
-      error: "producto no encontrado",
-    });
+  res.redirect(`/productos/listar/categoria/${data.categoria}`)
 });
-// buscar por nombre
-router.get("/nombre/:nombre", async (req, res) => {
-  const { nombre } = req.params;
-  // console.log(nombre)
-  const currentProduct = await product.getByNombre(nombre)
-  // console.log(currentProduct)
-    if (currentProduct) {
-      return res.json(currentProduct);
-    }
-    res.status(404).json({
-      error: "producto no encontrado",
-    });
-});
-// buscar por precio
-router.get("/precio/:precioInferior/:precioSuperior?", async (req, res) => {
-  const { precioInferior } = req.params;
-  const { precioSuperior } = req.params;
-  // console.log(req.params)
-  const products = await product.getByRangoPrecio(precioInferior , precioSuperior)
-  // console.log(products)
-    res.render('vista', {
-      active: "vista",
-      products: products
-    });
-});
-// buscar por stock
-router.get("/stock/:stockInferior/:stockSuperior?", async (req, res) => {
-  const { stockInferior } = req.params;
-  const { stockSuperior } = req.params;
-  // console.log(req.params)
-  const products = await product.getByRangoStock(stockInferior , stockSuperior)
-  // console.log(products)
-    res.render('vista', {
-      active: "vista",
-      products: products
-    });
-});
+
+router.get('/listar/categoria/:id', async (req, res) => {
+  const { id } = req.params;
+  const user = req.user;
+  const products = await product.get()
+  let productosFiltrados = products.filter( prod => prod.categoria == id)
+  res.render('vista', {
+    active: "vista",
+    products: productosFiltrados,
+    user: user
+  });
+})
 
 
 module.exports = router;

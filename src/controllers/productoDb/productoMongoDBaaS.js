@@ -33,6 +33,7 @@ const {daoProductos} = require('../../models/esquemaProducto');
         nombre: data.nombre,
         descripcion: data.descripcion,
         codigo: data.codigo,
+        categoria: data.categoria,
         foto: data.foto,
         precio: data.precio,
         stock: data.stock
@@ -73,6 +74,7 @@ const {daoProductos} = require('../../models/esquemaProducto');
       const nuevoNombre = data.nombre;
       const nuevoDescripcion = data.descripcion;
       const nuevoCodigo = data.codigo;
+      const nuevoCategoria= data.categoria;
       const nuevoFoto = data.foto;
       const nuevoPrecio = data.precio;
       const nuevoStock = data.stock;
@@ -81,6 +83,7 @@ const {daoProductos} = require('../../models/esquemaProducto');
         nombre: nuevoNombre,
         descripcion: nuevoDescripcion,
         codigo: nuevoCodigo,
+        categoria: nuevoCategoria,
         foto: nuevoFoto,
         precio: nuevoPrecio,
         stock: nuevoStock,
