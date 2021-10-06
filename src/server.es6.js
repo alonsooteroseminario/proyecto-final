@@ -213,8 +213,10 @@ app.get('/chat', isAuth, (req, res) => {
   if (!req.user.contador){
     req.user.contador = 0
   }
-  // res.status(200)
-  res.sendFile('./index.html', { root:__dirname })
+  res.render('chat', {
+    user: req.user,
+  })
+  // res.sendFile('./index.html', { root:__dirname })
 });
 /* --------- INFO ---------- */
 app.get('/info', compression(), (req, res) => {

@@ -187,7 +187,7 @@ router.post('/comprar', async (req, res) => {
     estado: 'Finalizada',
     comprador: email 
   }
-  console.log(ordenesData)
+  // console.log(ordenesData)
   await ordenesDb.insertar(ordenesData);
   res.redirect('/carrito/comprafinalizada')
 })
