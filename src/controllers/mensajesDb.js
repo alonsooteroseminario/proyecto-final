@@ -40,7 +40,7 @@ class MensajesDB {
             } else {
       
             }
-          });
+          }).lean();
     }
 
     cerrar() {

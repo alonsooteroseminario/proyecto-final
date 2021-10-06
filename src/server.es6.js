@@ -215,9 +215,24 @@ app.get('/chat', isAuth, (req, res) => {
   }
   res.render('chat', {
     user: req.user,
+    userNombre: req.user.username
   })
   // res.sendFile('./index.html', { root:__dirname })
 });
+app.get('/chat/:id', isAuth, async (req, res) => {
+
+  const { id } = req.params;
+  let messages = await mensajesDB.listar()
+  let menssagesFiltrados = messages.filter( msg => msg.author == id)
+
+  res.render('chat', {
+    user: req.user,
+    userNombre: req.user.username,
+    menssagesFiltrados: menssagesFiltrados
+  })
+})
+
+
 /* --------- INFO ---------- */
 app.get('/info', compression(), (req, res) => {
   try {
@@ -261,6 +276,7 @@ const mensajesDB = new MensajeDB()
 io.on('connection', async socket => {
   console.log('Un cliente se ha conectado')
   let messages = await mensajesDB.listar()
+
   socket.emit('messages', messages)
 
   socket.on('new-message', async data => {

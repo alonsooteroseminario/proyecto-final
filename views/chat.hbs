@@ -1,4 +1,4 @@
-    {{#if user}}  
+{{#if user}}  
 
     <div class="form-group">
 
@@ -83,16 +83,45 @@
     </div>
 
 {{/if}}
+
+{{#if userNombre}} 
     <div class="container-fluid mt-3">
         <h1>Chat</h1>
         <hr>
     
-        <div id="messages"></div>
+
+
+        {{#if menssagesFiltrados}}
+
+            {{#each menssagesFiltrados}}
+                <div>
+                    <strong style="color:rgb(0,0,255);"> {{this.author}} </strong>:
+                    <em style="color:rgb(0,143,57);"> {{this.text}} </em>
+                    <strong> {{this.date}} </strong>
+                </div>
+            {{/each}}
+
+        {{else}}
+            <div id="messages"></div>
+        {{/if}}
     
+        <h1> - </h1>
+
+
         <form class="form-inline" onsubmit="return addMessage(this)" autocomplete="off">
-          <strong style="color:rgb(0,0,255);" id="useremail"></strong>
-          <input type="text" id="username" class="form-control my-2 mr-2" placeholder="Tu Nombre">
-          <input type="text" id="texto" class="form-control my-2 mr-2" placeholder="Cuéntanos algo...">
-          <input class="btn btn-primary my-2" type="submit" value="Enviar!">
+            <tr>
+                <strong>Escribir con usuario: {{userNombre}}</strong>
+                    {{!-- <input type="hidden" name="form" value="1" /> --}}
+                <input type="hidden" type="text" id="username" class="form-control my-2 mr-2" placeholder="Tu Nombre" value={{{userNombre}}}>
+            </tr>
+            <tr>
+                <input type="text" id="texto" class="form-control my-2 mr-2" placeholder="Cuéntanos algo...">
+            </tr>
+            <input class="btn btn-primary my-2" type="submit" value="Enviar!">
         </form>
-      </div>
+        
+    </div>
+{{else}}
+
+{{/if}}
+
