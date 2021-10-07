@@ -20,6 +20,8 @@ const app = express();
 const httpServer = require('http').Server(app);
 const io = require('socket.io')(httpServer);
 const compression = require('compression');
+const MensajeDB = require('./controllers/mensajesDb')
+const mensajesDB = new MensajeDB()
 
 var hbs = exphbs.create({
   extname: "hbs",
@@ -159,9 +161,8 @@ function isAuth(req, res, next) {
 
 /* --------------------- MONGO SESSION --------------------------- */
 const advancedOptions = { useNewUrlParser: true, useUnifiedTopology: true };
-const admin = process.env.MONGO_USER;
-const password = process.env.MONGO_PASSWORD;
-const url = 'mongodb+srv://'+admin.toString()+':'+password.toString()+'@cluster0.rzdyo.mongodb.net/sesiones?retryWrites=true&w=majority';
+
+const url = 'mongodb+srv://'+process.env.MONGO_USER.toString()+':'+process.env.MONGO_PASSWORD.toString()+'@cluster0.rzdyo.mongodb.net/sesiones?retryWrites=true&w=majority';
 
 app.use(session({
   store: MongoStore.create({
@@ -209,21 +210,67 @@ app.get('/logout', (req, res) => {
   }, 2000);
 })
 
+io.on('connection', async socket => {
+  console.log('Un cliente se ha conectado')
+  let messages = await mensajesDB.listar()
+  // let menssagesFiltrados = messages.filter( msg => msg.author == id)
+
+  socket.emit('messages', messages)
+
+  socket.on('new-message', async data => {
+      let newData = {
+        id: messages.length + 1,
+        author: data.author,
+        text: data.text,
+        date: data.date
+      }
+      messages.push(newData)
+      try{
+        await mensajesDB.insertar(messages)
+      }catch (err){
+        // console.log(err)
+      }
+      io.sockets.emit('messages', messages)
+  })
+})
 app.get('/chat', isAuth, (req, res) => {
+
   if (!req.user.contador){
     req.user.contador = 0
   }
-  res.render('chat', {
+  res.render('chatAdmin', {
     user: req.user,
     userNombre: req.user.username
   })
   // res.sendFile('./index.html', { root:__dirname })
 });
-app.get('/chat/:id', isAuth, async (req, res) => {
 
+app.get('/chat/responder/:id', isAuth, async (req, res) => {
   const { id } = req.params;
-  let messages = await mensajesDB.listar()
-  let menssagesFiltrados = messages.filter( msg => msg.author == id)
+  let menssages = await mensajesDB.listar()
+  let menssagesFiltrados = menssages.filter( msg => msg.author == id || msg.author == 'Administrador')
+
+  res.render('chatResponder', {
+    user: req.user,
+    userNombre: req.user.username,
+    menssagesFiltrados: menssagesFiltrados
+  })
+})
+
+app.post('/chat/responder', isAuth, (req, res) => {
+  let data = req.body
+  res.redirect(`/chat/responder/${data.usuariorespuesta}`)
+})
+
+app.post('/chat/usuario', isAuth, (req, res) => {
+  let data = req.body
+  res.redirect(`/chat/${data.username}`)
+})
+
+app.get('/chat/:id', isAuth, async (req, res) => {
+  const { id } = req.params;
+  let menssages = await mensajesDB.listar()
+  let menssagesFiltrados = menssages.filter( msg => msg.author == id || msg.author == 'Administrador')
 
   if  (req.user.username == id) {
     res.render('chat', {
@@ -231,11 +278,12 @@ app.get('/chat/:id', isAuth, async (req, res) => {
       userNombre: req.user.username,
       menssagesFiltrados: menssagesFiltrados
     })
-  } else {
+  }
+  else {
     res.json({error: 'ruta no authorizada'})
+    // res.redirect(`/chat/${id}`)
   }
 })
-
 
 /* --------- INFO ---------- */
 app.get('/info', compression(), (req, res) => {
@@ -272,22 +320,6 @@ app.get('/config', (req, res) => {
   } catch(err) {
  
   }
-})
-
-const MensajeDB = require('./controllers/mensajesDb')
-const mensajesDB = new MensajeDB()
-
-io.on('connection', async socket => {
-  console.log('Un cliente se ha conectado')
-  let messages = await mensajesDB.listar()
-
-  socket.emit('messages', messages)
-
-  socket.on('new-message', async data => {
-      messages.push(data)
-      await mensajesDB.insertar(messages)
-      io.sockets.emit('messages', messages)
-  })
 })
 
 const port = parseInt(process.argv[2]) || process.env.PORT || 8080;
