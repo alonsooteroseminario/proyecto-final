@@ -95,7 +95,11 @@
 
             {{#each menssagesFiltrados}}
                 <div>
-                    <strong style="color:rgb(0,0,255);"> {{this.author}} </strong>:
+                    {{#if administrador}}
+                        <strong style="color:rgb(255,0,0);"> {{this.author}} </strong>:
+                    {{else}}
+                        <strong style="color:rgb(0,0,255);"> {{this.author}} </strong>:
+                    {{/if}}
                     <em style="color:rgb(0,143,57);"> {{this.text}} </em>
                     <strong> {{this.date}} </strong>
                 </div>
@@ -107,14 +111,19 @@
     
         <h1> - </h1>
 
-
-        <form action="/chat/usuario" method="post" class="form-inline" onsubmit="return addMessage(this)" autocomplete="off">
-            <tr>
-                <strong>Escribir con usuario: {{userNombre}}</strong>
-                    {{!-- <input type="hidden" name="form" value="1" /> --}}
-                <input type="hidden" type="text" name="username" id="username" class="form-control my-2 mr-2" placeholder="Tu Nombre" value={{{userNombre}}}>
+        <form action="/chat/responder" method="post" >
+            <tr>              
+                <input type="text" id="usuario-respuesta" name="usuariorespuesta" class="form-control my-2 mr-2" placeholder="Usuario al que se le responderá">
             </tr>
+            <input class="btn btn-primary my-2" type="submit" value="Elegir usuario">
+        </form>
+        <form class="form-inline" onsubmit="return addMessage(this)" autocomplete="off">
             <tr>
+                <strong style="color:rgb(255, 0, 0);">Escribir como usuario Administrador</strong>
+                    {{!-- <input type="hidden" name="form" value="1" /> --}}
+                <input type="hidden" type="text" id="username" class="form-control my-2 mr-2" placeholder="Tu Nombre" value="Administrador">
+            </tr>
+            <tr>              
                 <input type="text" id="texto" class="form-control my-2 mr-2" placeholder="Cuéntanos algo...">
             </tr>
             <input class="btn btn-primary my-2" type="submit" value="Enviar!">

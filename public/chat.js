@@ -1,5 +1,10 @@
 const socket = io.connect();
 
+// window.addEventListener('DOMContentLoaded', (event) => {
+//   console.log('DOM fully loaded and parsed');
+//   console.log(document.getElementsByName('username').value)
+// });
+
 socket.on('messages', data => {
   // console.log(data);
   render(data);
