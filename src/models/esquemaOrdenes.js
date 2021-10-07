@@ -16,7 +16,8 @@ const esquemaOrdenes = new mongoose.Schema({
     },
     fyh: { type: String, require: true },
     estado: { type: String, require: true },
-    comprador: { type: String, require: true }
+    comprador: { type: String, require: true },
+    direccion: { type: String, require: true }
 })
 
 const daoOrdenes = mongoose.model('Ordenes', esquemaOrdenes);

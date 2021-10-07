@@ -185,7 +185,8 @@ router.post('/comprar', async (req, res) => {
     precioId: dataPrecio,
     fyh: new Date().toLocaleDateString() + new Date().toLocaleTimeString(),
     estado: 'Finalizada',
-    comprador: email 
+    comprador: email,
+    direccion: req.body.direccion
   }
   // console.log(ordenesData)
   await ordenesDb.insertar(ordenesData);
