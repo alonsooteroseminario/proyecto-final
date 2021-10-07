@@ -88,10 +88,12 @@
 <h1>Lista de Productos dentro del Carrito</h1>
 {{#if carritos}}
     <h1>El carrito tiene: {{carritos.length}} productos.</h1>
-
+    <br>
     <div class="col">
         <form action="/carrito/comprar" method="post" role="form">
             <td>
+                <h2 > Direccion de Entrega : </h2>
+                <input id="direccion" class="form-control" type="text" name="direccion">
                 <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#cart">
                     Finalizar Compra 
                 </button>
@@ -104,6 +106,7 @@
                 </button>
             </td>
         </form>
+
     </div>
 
 
