@@ -180,6 +180,8 @@ app.use(passport.session());
 app.use("/productos", isAuth, require("./routes/products.routes"));
 app.use("/productos/agregar", isAuth, require('./routes/agregarProducto.routes'));
 app.use('/carrito', isAuth, require("./routes/carrito.routes"));
+app.use('/chat', isAuth, require('./routes/chat.routes'));
+
 app.get('/', (req, res) => {
   res.render('login')
 })
@@ -232,57 +234,6 @@ io.on('connection', async socket => {
       }
       io.sockets.emit('messages', messages)
   })
-})
-app.get('/chat', isAuth, (req, res) => {
-
-  if (!req.user.contador){
-    req.user.contador = 0
-  }
-  res.render('chatAdmin', {
-    user: req.user,
-    userNombre: req.user.username
-  })
-  // res.sendFile('./index.html', { root:__dirname })
-});
-
-app.get('/chat/responder/:id', isAuth, async (req, res) => {
-  const { id } = req.params;
-  let menssages = await mensajesDB.listar()
-  let menssagesFiltrados = menssages.filter( msg => msg.author == id || msg.author == 'Administrador')
-
-  res.render('chatResponder', {
-    user: req.user,
-    userNombre: req.user.username,
-    menssagesFiltrados: menssagesFiltrados
-  })
-})
-
-app.post('/chat/responder', isAuth, (req, res) => {
-  let data = req.body
-  res.redirect(`/chat/responder/${data.usuariorespuesta}`)
-})
-
-app.post('/chat/usuario', isAuth, (req, res) => {
-  let data = req.body
-  res.redirect(`/chat/${data.username}`)
-})
-
-app.get('/chat/:id', isAuth, async (req, res) => {
-  const { id } = req.params;
-  let menssages = await mensajesDB.listar()
-  let menssagesFiltrados = menssages.filter( msg => msg.author == id || msg.author == 'Administrador')
-
-  if  (req.user.username == id) {
-    res.render('chat', {
-      user: req.user,
-      userNombre: req.user.username,
-      menssagesFiltrados: menssagesFiltrados
-    })
-  }
-  else {
-    res.json({error: 'ruta no authorizada'})
-    // res.redirect(`/chat/${id}`)
-  }
 })
 
 /* --------- INFO ---------- */
