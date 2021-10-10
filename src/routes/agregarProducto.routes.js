@@ -1,7 +1,3 @@
-// import express from 'express';
-// import path from 'path';
-// import Product from '../controllers/product';
-
 const express = require('express');
 const router = express.Router();
 
